@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String  @id @default(uuid())
+  externalId String
+  firstName  String
+  lastName   String
+  email      String  @unique
+  phone      String?
+  role       String?
+  company    Company[]
+  posts      Post[]
+
+  @@map("users")
+}
+
+model Company {
+  id      String  @id @default(uuid())
+  name    String
+  ownerId String  @unique
+  owner   User    @relation(fields: [ownerId], references: [id])
+  posts   Post[]
+
+  @@map("companies")
+}
+
+model Post {
+  id           String   @id @default(uuid())
+  content      String
+  publishedAt  DateTime
+  authorId     String
+  topicId      String
+  companyId    String
+  author       User     @relation(fields: [authorId], references: [id])
+  topic        Topic    @relation(fields: [topicId], references: [id])
+  company      Company  @relation(fields: [companyId], references: [id])
+
+  @@map("posts")
+}
+
+model Topic {
+  id          String   @id @default(uuid())
+  description String
+  posts       Post[]
+
+  @@map("topics")
+}
+
+model Producer {
+  id           String  @id @default(uuid())
+  name         String
+  imageProfile String
+  email        String  @unique
+  office       String
+
+  @@map("producers")
+}
