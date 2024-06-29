@@ -24,9 +24,10 @@ model User {
 model Company {
   id      String  @id @default(uuid())
   name    String
-  ownerId String  @unique
+  ownerId String
   owner   User    @relation(fields: [ownerId], references: [id])
   posts   Post[]
+  producers Producer[]
 
   @@map("companies")
 }
@@ -57,8 +58,10 @@ model Producer {
   id           String  @id @default(uuid())
   name         String
   imageProfile String
-  email        String  @unique
+  email        String  
   office       String
+  companyId    String  @unique
+  company      Company @relation(fields: [companyId], references: [id])
 
   @@map("producers")
 }

@@ -2,6 +2,7 @@ import fastify, { FastifyInstance } from 'fastify'
 import cors from '@fastify/cors'
 import { userRoutes } from './routes/user.routes';
 import { webhookClerk } from './routes/clerk.routes';
+import { companyRoutes } from './routes/company.routes';
 
 const app: FastifyInstance = fastify({logger: true})
 const port = parseInt(process.env.PORT as string);
@@ -15,6 +16,9 @@ app.register(cors, {
 
 app.register(userRoutes, {
     prefix: '/users',
+});
+app.register(companyRoutes, {
+    prefix: '/companies',
 });
 app.register(webhookClerk, {
     prefix: '/clerk',
