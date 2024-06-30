@@ -1,6 +1,7 @@
-import { Company } from "@prisma/client";
 import {
+	Company,
 	CompanyCreate,
+	CompanyHome,
 	CompanyRepository,
 } from "../interfaces/company.interface";
 import { UserRepository } from "../interfaces/user.interface";
@@ -31,7 +32,7 @@ class CompanyUseCase {
 		});
 	}
 
-	async getAllCompaniesByUserId(externalId: string): Promise<Company[] | []>{
+	async getAllCompaniesByUserId(externalId: string): Promise<CompanyHome[] | []>{
 		const user = await this.userRepository.findUserByExternalOrId(externalId);
 		if (!user) {
 			throw new Error(
