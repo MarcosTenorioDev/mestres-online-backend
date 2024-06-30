@@ -22,12 +22,14 @@ model User {
 }
 
 model Company {
-  id      String  @id @default(uuid())
-  name    String
-  ownerId String
-  owner   User    @relation(fields: [ownerId], references: [id])
-  posts   Post[]
-  producers Producer[]
+  id           String  @id @default(uuid())
+  name         String
+  ownerId      String
+  image        String @default("")
+  description  String
+  owner        User    @relation(fields: [ownerId], references: [id])
+  posts        Post[]
+  producers    Producer[]
 
   @@map("companies")
 }
