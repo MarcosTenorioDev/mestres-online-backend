@@ -42,18 +42,6 @@ class CompanyRepositoryPrisma implements CompanyRepository {
         return company;
     }
 
-    async findByOwnerId(ownerId: string): Promise<Company[] | null> {
-        const company = await prisma.company.findMany({
-            where: { ownerId },
-            include: {
-                owner: true,
-                posts: true,
-                producers: true,
-            }
-        });
-        return company;
-    }
-
     async update(data: CompanyUpdate): Promise<Company> {
         const company = await prisma.company.update({
             where: { id: data.id },

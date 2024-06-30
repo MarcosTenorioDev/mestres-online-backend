@@ -15,7 +15,7 @@ class UserUseCase {
 	}: UserCreate): Promise<User> {
 		const existingUser = await this.userRepository.findByEmail(email);
 		if (existingUser) {
-			throw new Error("Email already exists");
+			throw new Error("Email Já existe");
 		}
 		return this.userRepository.create({
 			externalId,

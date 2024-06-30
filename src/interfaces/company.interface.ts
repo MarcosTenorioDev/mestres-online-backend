@@ -40,7 +40,6 @@ export interface CompanyRepository {
     create(data: CompanyCreate): Promise<Company>;
     findById(id: string): Promise<Company | null>;
     getAllCompaniesByUserId(externalId:string):Promise<{ id: string; name: string; ownerId: string; description:string, image:string | null }[] | []>
-    findByOwnerId(ownerId: string): Promise<Company[] | null>;
     update(data: CompanyUpdate): Promise<Company>;
     delete(id: string): Promise<void>;
 }

@@ -13,15 +13,21 @@ const companyUseCase = new CompanyUseCase(
 );
 
 export async function companyRoutes(fastify: FastifyInstance) {
-    CreateCompanyRoute(fastify)
-	GetAllCompaniesByUserId(fastify)
+	CreateCompanyRoute(fastify);
+	GetAllCompaniesByUserId(fastify);
+	GetCompanyById(fastify)
 }
 
 function CreateCompanyRoute(fastify: FastifyInstance) {
 	fastify.post<{ Body: CompanyCreate }>("/", async (req, reply) => {
 		const { name, ownerId, description, image } = req.body;
 		try {
-			const data = await companyUseCase.create({ name, ownerId, description, image });
+			const data = await companyUseCase.create({
+				name,
+				ownerId,
+				description,
+				image,
+			});
 			reply.code(201).send(data);
 		} catch (error) {
 			reply.code(400).send(error);
@@ -30,14 +36,32 @@ function CreateCompanyRoute(fastify: FastifyInstance) {
 }
 
 function GetAllCompaniesByUserId(fastify: FastifyInstance) {
-	fastify.addHook("preHandler", jwtValidator);
-	fastify.get<{ Params: { externalId: string } }>("/", async (req, reply) => {
-		const externalId = req.params.externalId;
-		try {
-			const data = await companyUseCase.getAllCompaniesByUserId(externalId);
-			reply.code(201).send(data);
-		} catch (error) {
-			reply.code(400).send(error);
-		}
+	fastify.get<{ Params: { externalId: string } }>("/", {
+		preHandler: [jwtValidator],
+		handler: async (req, reply) => {
+			const externalId = req.params.externalId;
+			try {
+				const data = await companyUseCase.getAllCompaniesByUserId(externalId);
+				reply.code(201).send(data);
+			} catch (error) {
+				reply.code(400).send(error);
+			}
+		},
+	});
+}
+
+function GetCompanyById(fastify: FastifyInstance) {
+	fastify.get<{ Params: { id: string , externalId:string} }>("/:id", {
+		preHandler: [jwtValidator],
+		handler: async (req, reply) => {
+			const { id } = req.params;
+			const externalId = req.params.externalId;
+			try {
+				const data = await companyUseCase.getCompanyById(id,externalId);
+				reply.code(201).send(data);
+			} catch (error) {
+				reply.code(400).send(error);
+			}
+		},
 	});
 }
