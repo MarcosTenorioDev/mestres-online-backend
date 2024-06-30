@@ -30,6 +30,7 @@ model Company {
   owner        User    @relation(fields: [ownerId], references: [id])
   posts        Post[]
   producers    Producer[]
+  topics       Topic[]
 
   @@map("companies")
 }
@@ -51,6 +52,8 @@ model Post {
 model Topic {
   id          String   @id @default(uuid())
   description String
+  companyId   String
+  company     Company @relation(fields: [companyId], references: [id])
   posts       Post[]
 
   @@map("topics")
