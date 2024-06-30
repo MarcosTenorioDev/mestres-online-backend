@@ -14,7 +14,7 @@ class CompanyUseCase {
         this.userRepository = userRepository
 	}
 
-	async create({ name, ownerId }: CompanyCreate): Promise<Company> {
+	async create({ name, ownerId, description, image }: CompanyCreate): Promise<Company> {
 		const user = await this.userRepository.findUserByExternalOrId(ownerId);
 
 		if (!user) {
@@ -26,7 +26,20 @@ class CompanyUseCase {
 		return this.companyRepository.create({
 			name,
 			ownerId,
+			image,
+			description
 		});
+	}
+
+	async getAllCompaniesByUserId(externalId: string): Promise<Company[] | []>{
+		const user = await this.userRepository.findUserByExternalOrId(externalId);
+		if (!user) {
+			throw new Error(
+				"Usuário não encontrado, por favor contatar o suporte técnico"
+			);
+		}
+
+		return this.companyRepository.getAllCompaniesByUserId(user.id)
 	}
 }
 

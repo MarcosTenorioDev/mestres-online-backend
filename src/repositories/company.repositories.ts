@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { Company, CompanyCreate, CompanyUpdate, CompanyRepository } from '../interfaces/company.interface';
+import { Company, CompanyCreate, CompanyUpdate, CompanyRepository, CompanyHome } from '../interfaces/company.interface';
 
 const prisma = new PrismaClient();
 
@@ -10,10 +10,14 @@ class CompanyRepositoryPrisma implements CompanyRepository {
             const company = await prisma.company.create({
                 data: {
                     name: data.name,
+                    description: data.description,
                     ownerId: data.ownerId,
+                    image: data.image
                 },
                 select: {
                     id: true,
+                    description:true,
+                    image:true,
                     name: true,
                     ownerId: true,
                     posts: true,
@@ -38,8 +42,8 @@ class CompanyRepositoryPrisma implements CompanyRepository {
         return company;
     }
 
-    async findByOwnerId(ownerId: string): Promise<Company | null> {
-        const company = await prisma.company.findUnique({
+    async findByOwnerId(ownerId: string): Promise<Company[] | null> {
+        const company = await prisma.company.findMany({
             where: { ownerId },
             include: {
                 owner: true,
@@ -56,6 +60,7 @@ class CompanyRepositoryPrisma implements CompanyRepository {
             data: {
                 name: data.name,
                 ownerId: data.ownerId,
+                description: data.description
             },
             include: {
                 owner: true,
@@ -70,6 +75,14 @@ class CompanyRepositoryPrisma implements CompanyRepository {
         await prisma.company.delete({
             where: { id }
         });
+    }
+
+    async getAllCompaniesByUserId(externalId: string): Promise<CompanyHome[] | []> {
+        const companies: CompanyHome[] | [] = await prisma.company.findMany({
+            where: {ownerId : externalId}
+        })
+
+        return companies
     }
 }
 

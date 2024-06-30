@@ -25,14 +25,16 @@ function registerUserRoute(fastify: FastifyInstance) {
 };
 
 function getUserRoute(fastify: FastifyInstance) {
-    fastify.addHook("preHandler", jwtValidator);
-    fastify.get<{ Params: { externalId: string } }>('/', async (req, reply) => {
-        const externalId = req.params.externalId;
-        try {
-            const data = await userUseCase.findUserByExternalOrId(externalId);
-            reply.code(200).send(data);
-        } catch (error) {
-            reply.code(404).send(error);
+    fastify.get<{ Params: { externalId: string } }>('/', {
+        preHandler: [jwtValidator],
+        handler: async (req, reply) => {
+            const externalId = req.params.externalId;
+            try {
+                const data = await userUseCase.findUserByExternalOrId(externalId);
+                reply.code(200).send(data);
+            } catch (error) {
+                reply.code(404).send(error);
+            }
         }
     });
 }
