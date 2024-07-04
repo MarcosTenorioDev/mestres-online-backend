@@ -40,11 +40,10 @@ model Post {
   content      String
   publishedAt  DateTime
   authorId     String
-  topicId      String
   companyId    String
   author       User     @relation(fields: [authorId], references: [id])
-  topic        Topic    @relation(fields: [topicId], references: [id])
   company      Company  @relation(fields: [companyId], references: [id])
+  topics       Post_Topics[]
 
   @@map("posts")
 }
@@ -53,11 +52,21 @@ model Topic {
   id          String   @id @default(uuid())
   description String
   companyId   String
-  company     Company @relation(fields: [companyId], references: [id])
-  posts       Post[]
+  company     Company  @relation(fields: [companyId], references: [id])
+  posts       Post_Topics[]
 
   @@map("topics")
 }
+
+model Post_Topics {
+  post     Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId   String
+  topic    Topic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  topicId  String
+
+  @@id([postId, topicId])
+}
+
 
 model Producer {
   id           String  @id @default(uuid())
