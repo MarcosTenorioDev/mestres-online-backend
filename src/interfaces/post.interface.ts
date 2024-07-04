@@ -3,6 +3,5 @@ export interface Post {
     content: string;
     publishedAt: Date;
     authorId: string;
-    topicId: string;
     companyId: string;
 }

@@ -3,6 +3,7 @@ import cors from '@fastify/cors'
 import { userRoutes } from './routes/user.routes';
 import { webhookClerk } from './routes/clerk.routes';
 import { companyRoutes } from './routes/company.routes';
+import { topicRoutes } from './routes/topic.routes';
 
 const app: FastifyInstance = fastify({logger: true})
 const port = parseInt(process.env.PORT as string);
@@ -22,6 +23,9 @@ app.register(companyRoutes, {
 });
 app.register(webhookClerk, {
     prefix: '/clerk',
+}); 
+app.register(topicRoutes, {
+    prefix: '/topics',
 }); 
 
 app.listen({ port: port || 3000, host: '0.0.0.0' }, function (err, address) {
