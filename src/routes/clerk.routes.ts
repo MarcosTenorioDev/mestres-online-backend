@@ -136,4 +136,8 @@ export async function webhookClerk(fastify: FastifyInstance) {
 			message: "Webhook received",
 		});
 	});
+
+	fastify.get('/',async(req,res) => {
+		res.send({status:'OK'})
+	})
 }
