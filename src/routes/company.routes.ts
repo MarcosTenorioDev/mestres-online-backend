@@ -19,12 +19,15 @@ export async function companyRoutes(fastify: FastifyInstance) {
 }
 
 function CreateCompanyRoute(fastify: FastifyInstance) {
-	fastify.post<{ Body: CompanyCreate }>("/", async (req, reply) => {
-		const { name, ownerId, description, image } = req.body;
+	fastify.post<{ Body: CompanyCreate, Params: { externalId: string } }>("/", {
+		preHandler: jwtValidator, 
+		handler: async (req, reply) => {
+		const { name, description, image } = req.body;
+		const externalId = req.params.externalId;
 		try {
 			const data = await companyUseCase.create({
 				name,
-				ownerId,
+				ownerId:externalId,
 				description,
 				image,
 			});
@@ -32,7 +35,8 @@ function CreateCompanyRoute(fastify: FastifyInstance) {
 		} catch (error) {
 			reply.code(400).send(error);
 		}
-	});
+	},
+});
 }
 
 function GetAllCompaniesByUserId(fastify: FastifyInstance) {
@@ -42,7 +46,7 @@ function GetAllCompaniesByUserId(fastify: FastifyInstance) {
 			const externalId = req.params.externalId;
 			try {
 				const data = await companyUseCase.getAllCompaniesByUserId(externalId);
-				reply.code(201).send(data);
+				reply.code(200).send(data);
 			} catch (error) {
 				reply.code(400).send(error);
 			}

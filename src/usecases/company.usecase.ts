@@ -26,7 +26,7 @@ class CompanyUseCase {
 
 		return this.companyRepository.create({
 			name,
-			ownerId,
+			ownerId:user.id,
 			image,
 			description
 		});
