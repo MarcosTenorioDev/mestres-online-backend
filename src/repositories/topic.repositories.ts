@@ -11,6 +11,14 @@ class TopicRepositoryPrisma implements TopicRepository {
 			data,
 		});
 	}
+
+	async getAllTopicsByCompanyId(id:string):Promise<ITopic[] | null>{
+		return await prisma.topic.findMany(({
+			where: {
+				companyId:id
+			}
+		}))
+	}
 }
 
 export { TopicRepositoryPrisma };

@@ -4,11 +4,11 @@ export interface ITopicCreate{
 }
 export interface ITopic{
     id:string,
-    description:string,
-    companyId:string,
+    description:string
 }
   
 
 export interface TopicRepository{
     create(data: ITopicCreate): Promise<ITopic>;
+    getAllTopicsByCompanyId(id:string):Promise<ITopic[] | null>
 }

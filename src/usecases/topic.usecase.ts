@@ -1,5 +1,5 @@
 import { CompanyRepository } from "../interfaces/company.interface";
-import { ITopicCreate, TopicRepository } from "../interfaces/topic.interface";
+import { ITopicCreate, TopicRepository, ITopic } from "../interfaces/topic.interface";
 import { UserRepository } from "../interfaces/user.interface";
 import { UserRepositoryPrisma } from "../repositories/user.repositories";
 import { CompanyUseCase } from "./company.usecase";

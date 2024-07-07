@@ -4,18 +4,23 @@ import { CompanyRepositoryPrisma } from "../repositories/company.repositories";
 import { CompanyUseCase } from "../usecases/company.usecase";
 import { UserRepositoryPrisma } from "../repositories/user.repositories";
 import { jwtValidator } from "../middlewares/auth.middlewares";
+import { TopicUseCase } from "../usecases/topic.usecase";
+import { TopicRepositoryPrisma } from "../repositories/topic.repositories";
 
 const companyRepositoryPrisma = new CompanyRepositoryPrisma();
 const userRepositoryPrisma = new UserRepositoryPrisma();
+const topicRepositoryPrisma = new TopicRepositoryPrisma()
 const companyUseCase = new CompanyUseCase(
 	companyRepositoryPrisma,
-	userRepositoryPrisma
+	userRepositoryPrisma,
+	topicRepositoryPrisma
 );
 
 export async function companyRoutes(fastify: FastifyInstance) {
 	CreateCompanyRoute(fastify);
 	GetAllCompaniesByUserId(fastify);
 	GetCompanyById(fastify)
+	GetAllTopicsByCompanyId(fastify)
 }
 
 function CreateCompanyRoute(fastify: FastifyInstance) {
@@ -68,4 +73,20 @@ function GetCompanyById(fastify: FastifyInstance) {
 			}
 		},
 	});
+}
+
+function GetAllTopicsByCompanyId(fastify: FastifyInstance){
+	fastify.get('/topics/:id', {
+		preHandler:[jwtValidator],
+		handler: async(req:any, res:any) => {
+			const externalId = req.params.externalId
+			const id = req.params.id;
+			try{
+				const data = await companyUseCase.getAllTopicsByCompanyId(externalId, id)
+				return res.code(200).send(data)
+			}catch(err){
+				res.code(400).send(err);
+			}
+		}
+	})
 }
