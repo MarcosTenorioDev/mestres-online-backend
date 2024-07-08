@@ -17,6 +17,7 @@ const postUseCase = new PostUseCase(
 );
 export async function postRoutes(fastify: FastifyInstance) {
 	CreatePostRoute(fastify);
+    getPostById(fastify)
 }
 
 function CreatePostRoute(fastify: FastifyInstance) {
@@ -36,4 +37,21 @@ function CreatePostRoute(fastify: FastifyInstance) {
 			}
 		},
 	});
+}
+
+function getPostById(fastify:FastifyInstance){
+    fastify.get('/:id', {
+        preHandler:[jwtValidator],
+        handler: async (req:any, res:any) => {
+            const externalId = req.params.externalId;
+            const id = req.params.id;
+            try{
+                const data = await postUseCase.getPostById(id, externalId)
+                res.code(200).send(data);
+
+            }catch(err){
+				res.code(400).send(err);
+            }
+        }
+    })
 }

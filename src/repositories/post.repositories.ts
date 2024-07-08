@@ -22,6 +22,23 @@ class PostRepositoryPrisma implements PostRepository {
 
         return post;
     }
+
+    async getPostById(id: string): Promise<Post> {
+        const post = await prisma.post.findUnique({
+            where: { id },
+            include: {
+                topics: true, 
+                author: true, 
+                company: true 
+            },
+        });
+        
+        if (!post) {
+            throw new Error(`Postagem não encontrada`);
+        }
+
+        return post;
+    }
 }
 
 export { PostRepositoryPrisma };

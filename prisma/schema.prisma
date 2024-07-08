@@ -16,7 +16,6 @@ model User {
   phone      String?
   role       String?
   company    Company[]
-  posts      Post[]
 
   @@map("users")
 }
@@ -41,7 +40,7 @@ model Post {
   publishedAt  DateTime
   authorId     String
   companyId    String
-  author       User     @relation(fields: [authorId], references: [id])
+  author       Producer     @relation(fields: [authorId], references: [id])
   company      Company  @relation(fields: [companyId], references: [id])
   topics       Post_Topics[]
 
@@ -76,6 +75,7 @@ model Producer {
   office       String
   companyId    String  @unique
   company      Company @relation(fields: [companyId], references: [id])
+  posts        Post[]
 
   @@map("producers")
 }

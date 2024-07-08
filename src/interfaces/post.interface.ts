@@ -16,4 +16,5 @@ export interface IPostCreate{
 
 export interface PostRepository{
     create(data:IPostCreate,externalId:string):Promise<Post>
+    getPostById(id: string): Promise<Post>
 }

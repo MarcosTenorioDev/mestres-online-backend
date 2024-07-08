@@ -41,6 +41,11 @@ class PostUseCase {
 
         return post
     }
+
+    async getPostById(id:string, externalId:string):Promise<Post>{
+         const post = await this.postRepository.getPostById(id)
+         return post
+    }
 }
 
 export { PostUseCase };
