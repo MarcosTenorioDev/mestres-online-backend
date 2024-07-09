@@ -4,6 +4,8 @@ export interface Post {
     publishedAt: Date;
     authorId: string;
     companyId: string;
+    imagePreview: string;
+    contentPreview: string;
 }
 
 export interface IPostCreate{
@@ -11,6 +13,8 @@ export interface IPostCreate{
     authorId: string;
     companyId: string;
     publishedAt?: Date;
+    imagePreview: string;
+    contentPreview: string;
     topicIds: {id:string}[]
 }
 

@@ -40,6 +40,8 @@ model Post {
   publishedAt  DateTime
   authorId     String
   companyId    String
+  imagePreview String
+  contentPreview String
   author       Producer     @relation(fields: [authorId], references: [id])
   company      Company  @relation(fields: [companyId], references: [id])
   topics       Post_Topics[]

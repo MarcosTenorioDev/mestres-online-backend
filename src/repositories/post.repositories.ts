@@ -9,6 +9,8 @@ class PostRepositoryPrisma implements PostRepository {
                 content: data.content,
                 authorId: data.authorId,
                 companyId: data.companyId,
+                contentPreview: data.contentPreview,
+                imagePreview: data.imagePreview,
                 publishedAt: data.publishedAt ?? new Date(),
                 topics: {
                     create: data.topicIds.map(topic => ({

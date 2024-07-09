@@ -24,11 +24,11 @@ function CreatePostRoute(fastify: FastifyInstance) {
 	fastify.post<{ Body: IPostCreate }>("/", {
 		preHandler: [jwtValidator],
 		handler: async (req: any, reply: any) => {
-			const { content, authorId, companyId, topicIds } = req.body;
+			const { content, authorId, companyId, topicIds, contentPreview, imagePreview } = req.body;
 			const externalId = req.params.externalId;
 			try {
 				const data = await postUseCase.create(
-					{ content, authorId, companyId, topicIds },
+					{ content, authorId, companyId, topicIds, contentPreview, imagePreview },
 					externalId
 				);
 				reply.code(201).send(data);
