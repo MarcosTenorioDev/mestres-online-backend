@@ -70,7 +70,7 @@ model Post_Topics {
 model Producer {
   id           String  @id @default(uuid())
   name         String
-  imageProfile String
+  imageProfile String?
   email        String  
   office       String
   companyId    String  @unique
