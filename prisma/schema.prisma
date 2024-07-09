@@ -75,7 +75,7 @@ model Producer {
   imageProfile String?
   email        String  
   office       String
-  companyId    String  @unique
+  companyId    String  
   company      Company @relation(fields: [companyId], references: [id])
   posts        Post[]
 
