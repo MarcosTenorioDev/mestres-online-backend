@@ -1,7 +1,7 @@
 export interface Producer {
     id: string
     name: string
-    imageProfile:string
+    imageProfile:string | null;
     email:string
     office: string
     companyId: string
@@ -9,7 +9,7 @@ export interface Producer {
 
 export interface IProducerCreate {
     name: string;
-    imageProfile: string;
+    imageProfile: string | null;
     email: string;
     office: string;
     companyId: string;
