@@ -67,7 +67,7 @@ function GetCompanyById(fastify: FastifyInstance) {
 			const externalId = req.params.externalId;
 			try {
 				const data = await companyUseCase.getCompanyById(id,externalId);
-				reply.code(201).send(data);
+				reply.code(200).send(data);
 			} catch (error) {
 				reply.code(400).send(error);
 			}

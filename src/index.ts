@@ -5,6 +5,7 @@ import { webhookClerk } from './routes/clerk.routes';
 import { companyRoutes } from './routes/company.routes';
 import { topicRoutes } from './routes/topic.routes';
 import { postRoutes } from './routes/post.routes';
+import { producerRoutes } from './routes/producer.routes';
 
 const app: FastifyInstance = fastify({logger: false})
 const port = parseInt(process.env.PORT as string);
@@ -30,6 +31,9 @@ app.register(topicRoutes, {
 }); 
 app.register(postRoutes, {
     prefix:'/posts'
+})
+app.register(producerRoutes, {
+    prefix:"/producers"
 })
 
 app.listen({ port: port || 3000, host: '0.0.0.0' }, function (err, address) {
