@@ -1,3 +1,4 @@
+import { Producer } from "@prisma/client";
 import {
 	Company,
 	CompanyCreate,
@@ -56,6 +57,12 @@ class CompanyUseCase {
 
 		const company = await this.companyRepository.findById(id);
 
+		if(!company){
+			throw new Error(
+				"Companhia não encontrada"
+			)
+		}
+
 		if(user.id !== company?.ownerId){
 			throw new Error(
 				"Operação não permitida, por favor contate o suporte técnico"
@@ -76,6 +83,12 @@ class CompanyUseCase {
 
 		const company = await this.companyRepository.findById(id);
 
+		if(!company){
+			throw new Error(
+				"Companhia não encontrada"
+			)
+		}
+
 		if(user.id !== company?.ownerId){
 			throw new Error(
 				"Operação não permitida, por favor contate o suporte técnico"
@@ -85,6 +98,34 @@ class CompanyUseCase {
 		const topics : ITopic[] | null = await this.topicRepository.getAllTopicsByCompanyId(id);
 
 		return topics
+	}
+
+	async getAllProducersByCompanyId(id:string, externalId:string):Promise<Producer[] | null>{
+		const user = await this.userRepository.findUserByExternalOrId(externalId);
+		if (!user) {
+			throw new Error(
+				"Usuário não encontrado, por favor contate o suporte técnico"
+			);
+		}
+
+		const company = await this.companyRepository.findById(id);
+
+		if(!company){
+			throw new Error(
+				"Companhia não encontrada"
+			)
+		}
+
+		if(user.id !== company?.ownerId){
+			throw new Error(
+				"Operação não permitida, por favor contate o suporte técnico"
+			)
+		}
+
+		const producers: Producer[] | null = await this.companyRepository.getAllProducersByCompanyId(id)
+
+		return producers
+
 	}
 }
 

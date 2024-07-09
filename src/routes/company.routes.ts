@@ -21,6 +21,7 @@ export async function companyRoutes(fastify: FastifyInstance) {
 	GetAllCompaniesByUserId(fastify);
 	GetCompanyById(fastify)
 	GetAllTopicsByCompanyId(fastify)
+	getAllProducersByCompanyId(fastify)
 }
 
 function CreateCompanyRoute(fastify: FastifyInstance) {
@@ -83,6 +84,22 @@ function GetAllTopicsByCompanyId(fastify: FastifyInstance){
 			const id = req.params.id;
 			try{
 				const data = await companyUseCase.getAllTopicsByCompanyId(externalId, id)
+				return res.code(200).send(data)
+			}catch(err){
+				res.code(400).send(err);
+			}
+		}
+	})
+}
+
+function getAllProducersByCompanyId (fastify:FastifyInstance){
+    fastify.get("/producers/:id", {
+		preHandler:[jwtValidator],
+		handler: async(req:any,res:any) => {
+			const externalId = req.params.externalId
+			const id = req.params.id
+			try{
+				const data = await companyUseCase.getAllProducersByCompanyId(id, externalId)
 				return res.code(200).send(data)
 			}catch(err){
 				res.code(400).send(err);

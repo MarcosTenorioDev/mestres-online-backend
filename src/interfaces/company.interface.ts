@@ -42,4 +42,5 @@ export interface CompanyRepository {
     getAllCompaniesByUserId(externalId:string):Promise<{ id: string; name: string; ownerId: string; description:string, image:string }[] | []>
     update(data: CompanyUpdate): Promise<Company>;
     delete(id: string): Promise<void>;
+    getAllProducersByCompanyId(id:string):Promise<Producer[] | null>;
 }
