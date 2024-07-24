@@ -1,5 +1,5 @@
 import { Post } from "./post.interface";
-import { Producer } from "./producer.interface";
+import { IProducerCompany, Producer } from "./producer.interface";
 import { User } from "./user.interface";
 
 export interface Company {
@@ -42,5 +42,5 @@ export interface CompanyRepository {
     getAllCompaniesByUserId(externalId:string):Promise<{ id: string; name: string; ownerId: string; description:string, image:string }[] | []>
     update(data: CompanyUpdate): Promise<Company>;
     delete(id: string): Promise<void>;
-    getAllProducersByCompanyId(id:string):Promise<Producer[] | null>;
+    getAllProducersByCompanyId(id:string):Promise<IProducerCompany[] | null>;
 }

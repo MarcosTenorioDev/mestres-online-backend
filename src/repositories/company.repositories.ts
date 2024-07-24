@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Company, CompanyCreate, CompanyUpdate, CompanyRepository, CompanyHome } from '../interfaces/company.interface';
-import { Producer } from '../interfaces/producer.interface';
+import { IProducerCompany, Producer } from '../interfaces/producer.interface';
 
 const prisma = new PrismaClient();
 
@@ -74,10 +74,14 @@ class CompanyRepositoryPrisma implements CompanyRepository {
         return companies
     }
 
-    async getAllProducersByCompanyId(id: string): Promise<Producer[] | null> {
-        const producers: Producer[] | null = await prisma.producer.findMany({
+    async getAllProducersByCompanyId(id: string): Promise<IProducerCompany[] | null> {
+        const producers: IProducerCompany[] | null = await prisma.producer.findMany({
             where:{
                 companyId: id
+            },
+            select:{
+                id:true,
+                name:true
             }
         })
         return producers

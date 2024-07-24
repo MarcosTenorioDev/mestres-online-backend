@@ -7,6 +7,11 @@ export interface Producer {
     companyId: string
 }
 
+export interface IProducerCompany{
+    id:string,
+    name:string
+}
+
 export interface IProducerCreate {
     name: string;
     imageProfile: string | null;

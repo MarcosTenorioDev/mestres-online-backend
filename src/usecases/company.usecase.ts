@@ -7,6 +7,7 @@ import {
 } from "../interfaces/company.interface";
 import { ITopic, TopicRepository } from "../interfaces/topic.interface";
 import { UserRepository } from "../interfaces/user.interface";
+import { IProducerCompany } from "../interfaces/producer.interface";
 
 class CompanyUseCase {
 	private companyRepository: CompanyRepository;
@@ -100,7 +101,7 @@ class CompanyUseCase {
 		return topics
 	}
 
-	async getAllProducersByCompanyId(id:string, externalId:string):Promise<Producer[] | null>{
+	async getAllProducersByCompanyId(id:string, externalId:string):Promise<IProducerCompany[] | null>{
 		const user = await this.userRepository.findUserByExternalOrId(externalId);
 		if (!user) {
 			throw new Error(
@@ -122,7 +123,7 @@ class CompanyUseCase {
 			)
 		}
 
-		const producers: Producer[] | null = await this.companyRepository.getAllProducersByCompanyId(id)
+		const producers: IProducerCompany[] | null = await this.companyRepository.getAllProducersByCompanyId(id)
 
 		return producers
 
