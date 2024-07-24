@@ -42,6 +42,7 @@ model Post {
   companyId    String
   imagePreview String
   contentPreview String
+  isActive      Boolean @default(false)
   author       Producer     @relation(fields: [authorId], references: [id])
   company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   topics       Post_Topics[]
