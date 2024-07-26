@@ -41,6 +41,7 @@ model Post {
   authorId     String
   companyId    String
   imagePreview String
+  title        String  @default("")
   contentPreview String
   isActive      Boolean @default(false)
   author       Producer     @relation(fields: [authorId], references: [id])

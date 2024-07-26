@@ -39,6 +39,7 @@ function CreatePostRoute(fastify: FastifyInstance) {
 				topicIds,
 				contentPreview,
 				imagePreview,
+				title,
 			} = req.body;
 			const externalId = req.params.externalId;
 			try {
@@ -50,6 +51,7 @@ function CreatePostRoute(fastify: FastifyInstance) {
 						topicIds,
 						contentPreview,
 						imagePreview,
+						title
 					},
 					externalId
 				);

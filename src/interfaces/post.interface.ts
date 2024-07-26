@@ -5,6 +5,7 @@ export interface Post {
     authorId: string;
     companyId: string;
     imagePreview: string;
+    title:string;
     contentPreview: string;
 }
 
@@ -15,7 +16,8 @@ export interface IPostCreate{
     publishedAt?: Date;
     imagePreview: string;
     contentPreview: string;
-    topicIds: {id:string}[]
+    title:string;
+    topicIds: {topicId:string}[]
 }
 
 export interface PostRepository{
