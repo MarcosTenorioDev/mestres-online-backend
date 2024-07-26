@@ -36,8 +36,21 @@ class CompanyRepositoryPrisma implements CompanyRepository {
             where: { id },
             include: {
                 owner: true,
-                posts: true,
-                producers: true,
+                posts: {
+                    include:{
+                        author:true,
+                        topics:{
+                            select:{
+                                topic:{
+                                    select:{
+                                        description:true,
+                                        id:true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
             }
         });
         return company;
