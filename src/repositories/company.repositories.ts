@@ -78,10 +78,6 @@ class CompanyRepositoryPrisma implements CompanyRepository {
         const producers: IProducerCompany[] | null = await prisma.producer.findMany({
             where:{
                 companyId: id
-            },
-            select:{
-                id:true,
-                name:true
             }
         })
         return producers
