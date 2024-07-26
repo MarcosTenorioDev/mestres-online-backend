@@ -3,11 +3,16 @@ import { IProducerCreate } from "../interfaces/producer.interface";
 import { jwtValidator } from "../middlewares/auth.middlewares";
 import { ProducerRepositoryPrisma } from "../repositories/producer.repositories";
 import { ProducerUseCase } from "../usecases/producer.usecase";
+import { CompanyRepositoryPrisma } from "../repositories/company.repositories";
+import { UserRepositoryPrisma } from "../repositories/user.repositories";
 
 const producerRepository = new ProducerRepositoryPrisma()
-const producerUseCase = new ProducerUseCase(producerRepository)
+const companyRepository = new CompanyRepositoryPrisma()
+const userRepository = new UserRepositoryPrisma()
+const producerUseCase = new ProducerUseCase(producerRepository,companyRepository,userRepository)
 export async function producerRoutes(fastify:FastifyInstance){
     createProducer(fastify)
+    deleteProducerById(fastify)
 }
 
 function createProducer (fastify: FastifyInstance){
@@ -24,4 +29,16 @@ function createProducer (fastify: FastifyInstance){
             }
         }
     })
+}
+
+function deleteProducerById(fastify:FastifyInstance){
+    fastify.delete("/:id", {preHandler: [jwtValidator], handler: async (req:any, res:any) => {
+        const {id, externalId} = req.params
+        try{
+            await producerUseCase.delete(id, externalId)
+            res.code(204).send();
+        }catch(err){
+            res.code(400).send(`${err}`)
+        }
+    }})
 }
