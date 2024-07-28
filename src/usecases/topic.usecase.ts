@@ -35,6 +35,40 @@ class TopicUseCase {
 
         return await this.topicRepository.create(data)
     }
+
+	async deleteById(id:string, externalId:string){
+		const user = await this.userRepository.findUserByExternalOrId(externalId);
+
+		if (!user) {
+			throw new Error(
+				"Usuário não encontrado, por favor contatar o suporte técnico"
+			);
+		}
+
+		const topic = await this.topicRepository.getTopicById(id)
+
+		if (!topic) {
+			throw new Error(
+				"Tópico não encontrado"
+			);
+		}
+
+		const company = await this.companyRepository.findById(topic.companyId)
+
+		if (!company) {
+			throw new Error(
+				"Id da compania inválido"
+			);
+		}
+
+		if(company.ownerId != user.id){
+			throw new Error(
+				"Operação não permitida"
+			);
+		}
+
+		await this.topicRepository.deleteTopicById(id)
+	}
 }
 
 export {TopicUseCase}

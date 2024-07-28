@@ -19,6 +19,22 @@ class TopicRepositoryPrisma implements TopicRepository {
 			}
 		}))
 	}
+
+	async deleteTopicById(id:string):Promise<void>{
+		await prisma.topic.delete(({
+			where: {
+				id
+			}
+		}))
+	}	
+
+	async getTopicById(id:string):Promise<ITopic | null>{
+		return await prisma.topic.findUnique(({
+			where: {
+				id
+			}
+		}))
+	}
 }
 
 export { TopicRepositoryPrisma };
