@@ -30,6 +30,8 @@ model Company {
   posts        Post[]
   producers    Producer[]
   topics       Topic[]
+  publicCode   String @default(uuid())
+  isActive    Boolean @default(false)
 
   @@map("companies")
 }
