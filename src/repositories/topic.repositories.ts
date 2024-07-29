@@ -35,6 +35,15 @@ class TopicRepositoryPrisma implements TopicRepository {
 			}
 		}))
 	}
+
+	async update(topic: ITopic): Promise<ITopic> {
+		return await prisma.topic.update(
+			{
+				where: { id: topic.id },
+				data: { description: topic.description },
+			}
+		)
+	}
 }
 
 export { TopicRepositoryPrisma };

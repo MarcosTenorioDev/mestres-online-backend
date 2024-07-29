@@ -19,6 +19,7 @@ const topicUseCase = new TopicUseCase(
 export async function topicRoutes(fastify: FastifyInstance) {
 	CreateTopipcRoute(fastify);
 	DeleteTopicByIdRoute(fastify)
+	UpdateTopicById(fastify)
 }
 
 function CreateTopipcRoute(fastify: FastifyInstance) {
@@ -56,4 +57,17 @@ function DeleteTopicByIdRoute(fastify: FastifyInstance) {
 			}
 		}
 	);
+}
+
+function UpdateTopicById(fastify:FastifyInstance){
+	fastify.put("/", {preHandler: [jwtValidator]}, async (req:any, res:any) => {
+		const {externalId} = req.params
+		const {id, companyId, description} = req.body
+		try{
+			const data = await topicUseCase.update({id, companyId, description}, externalId)
+			res.code(201).send(data)
+		}catch(err){
+			res.code(400).send(`${err}`)
+		}
+	})
 }

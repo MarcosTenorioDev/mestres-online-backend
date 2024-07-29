@@ -69,6 +69,18 @@ class TopicUseCase {
 
 		await this.topicRepository.deleteTopicById(id)
 	}
+
+	async update(topic:ITopic, externalId:string){
+		const user = await this.userRepository.findUserByExternalId(externalId)
+		const company = await this.companyRepository.findById(topic.companyId)
+
+		if(!user || !company || company.ownerId != user.id){
+			throw new Error("Operação não permitida")
+		}
+
+		const result = await this.topicRepository.update(topic)
+		return result
+	}
 }
 
 export {TopicUseCase}

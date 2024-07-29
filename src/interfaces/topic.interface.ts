@@ -14,4 +14,5 @@ export interface TopicRepository{
     getAllTopicsByCompanyId(id:string):Promise<ITopic[] | null>
     deleteTopicById(id:string):Promise<void>
     getTopicById(id:string):Promise<ITopic | null>
+    update(topic:ITopic):Promise<ITopic>
 }
