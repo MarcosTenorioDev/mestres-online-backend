@@ -24,4 +24,5 @@ export interface ProducerRepository {
 	create(data: IProducerCreate): Promise<Producer>;
 	delete(id: string): Promise<void>;
 	findById(id: string): Promise<Producer | null>;
+	update(producer:Producer): Promise<Producer>
 }

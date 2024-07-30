@@ -1,6 +1,6 @@
-import { Producer } from "@prisma/client";
 import {
 	IProducerCreate,
+	Producer,
 	ProducerRepository,
 } from "../interfaces/producer.interface";
 import { prisma } from "../db/prisma-client";
@@ -35,6 +35,23 @@ class ProducerRepositoryPrisma implements ProducerRepository {
 			})
 		}catch(err){
 			throw new Error(`Erro ao buscar o autor, ${err}`)
+		}
+	}
+
+	async update(producer: Producer): Promise<Producer> {
+		try{
+			return await prisma.producer.update({
+				where:{
+					id: producer.id
+				},data:{
+					imageProfile: producer.imageProfile,
+					email: producer.email,
+					name: producer.name,
+					office: producer.name
+				}
+			})
+		}catch(err){
+			throw new Error(`Erro ao editar o autor, ${err}`)
 		}
 	}
 }

@@ -1,10 +1,11 @@
-import { FastifyInstance } from "fastify";
+import fastify, { FastifyInstance } from "fastify";
 import { IProducerCreate } from "../interfaces/producer.interface";
 import { jwtValidator } from "../middlewares/auth.middlewares";
 import { ProducerRepositoryPrisma } from "../repositories/producer.repositories";
 import { ProducerUseCase } from "../usecases/producer.usecase";
 import { CompanyRepositoryPrisma } from "../repositories/company.repositories";
 import { UserRepositoryPrisma } from "../repositories/user.repositories";
+import { Producer } from "@prisma/client";
 
 const producerRepository = new ProducerRepositoryPrisma()
 const companyRepository = new CompanyRepositoryPrisma()
@@ -13,6 +14,7 @@ const producerUseCase = new ProducerUseCase(producerRepository,companyRepository
 export async function producerRoutes(fastify:FastifyInstance){
     createProducer(fastify)
     deleteProducerById(fastify)
+    updateProducer(fastify)
 }
 
 function createProducer (fastify: FastifyInstance){
@@ -41,4 +43,17 @@ function deleteProducerById(fastify:FastifyInstance){
             res.code(400).send(`${err}`)
         }
     }})
+}
+
+function updateProducer(fastify:FastifyInstance){
+    fastify.put("/", {preHandler:[jwtValidator]}, async(req:any, res:any) => {
+        const {id, email, name, imageProfile, office, companyId}:Producer = req.body;
+        const {externalId} = req.body
+        try{
+            const data = await producerUseCase.update({id, email, name, imageProfile, office, companyId}, externalId)
+            res.code(201).send(data)
+        }catch(err){
+            res.code(400).send(`${err}`)
+        }
+    })
 }

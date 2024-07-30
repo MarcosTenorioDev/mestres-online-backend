@@ -53,6 +53,25 @@ class ProducerUseCase {
 
 		return await this.producerRepository.delete(id);
 	}
+
+	async update(producer: Producer, externalId:string): Promise<Producer> {
+		const producerFind: Producer | null = await this.producerRepository.findById(
+			producer.id
+		);
+		const user = await this.userRepository.findUserByExternalId(externalId);
+		const company = await this.companyRepository.findById(producer.companyId);
+
+		if (!producerFind) {
+			throw new Error("Autor não encontrado");
+		}
+
+		if (!user || !company || company.ownerId != user.id || producerFind.companyId != company.id) {
+			throw new Error("Operação não permitida");
+		}
+		const result = await this.producerRepository.update(producer)
+		return result
+
+	}
 }
 
 export { ProducerUseCase };
