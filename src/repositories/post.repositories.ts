@@ -30,7 +30,11 @@ class PostRepositoryPrisma implements PostRepository {
         const post = await prisma.post.findUnique({
             where: { id },
             include: {
-                topics: true, 
+                topics: {
+                    select:{
+                        topic:true
+                    }
+                }, 
                 author: true, 
                 company: true 
             },
