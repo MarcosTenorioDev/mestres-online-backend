@@ -16,6 +16,7 @@ model User {
   phone      String?
   role       String?
   company    Company[]
+  isPaid    Boolean @default(false)
 
   @@map("users")
 }
