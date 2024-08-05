@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { CompanyRepository } from "../interfaces/company.interface";
 import {
 	IPostCreate,
+	IPostUpdate,
 	Post,
 	PostRepository,
 } from "../interfaces/post.interface";
@@ -75,6 +76,33 @@ class PostUseCase {
 
 		const url = `https://${result.Bucket}.s3.amazonaws.com/${result.Key}`;
 		return url;
+	}
+
+	async updatePost(data:IPostUpdate, externalId:string) : Promise<Post>{
+		const user = await this.userRepository.findUserByExternalOrId(externalId);
+
+		/*Verificar validade do token e se o usuário dele existe  */
+		if (!user) {
+			throw new Error(
+				"Usuário não encontrado, por favor contatar o suporte técnico"
+			);
+		}
+
+		const company = await this.companyRepository.findById(data.companyId);
+		/*Verificar se a company registrada existe  */
+		if (!company) {
+			throw new Error(
+				"Id da compania não encontrado, por favor, contate o suporte técnico"
+			);
+		}
+		/*Verificar se o usuário é o dono da company  */
+		if (user.id != company.ownerId) {
+			throw new Error("Apenas o dono da compania pode editar uma postagem");
+		}
+
+		const post = this.postRepository.updatePost(data);
+
+		return post;
 	}
 }
 

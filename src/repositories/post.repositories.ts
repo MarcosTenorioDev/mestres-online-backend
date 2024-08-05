@@ -1,5 +1,5 @@
 import { prisma } from "../db/prisma-client";
-import { IPostCreate, Post, PostRepository } from "../interfaces/post.interface";
+import { IPostCreate, IPostUpdate, Post, PostRepository } from "../interfaces/post.interface";
 
 class PostRepositoryPrisma implements PostRepository {
 
@@ -46,6 +46,41 @@ class PostRepositoryPrisma implements PostRepository {
 
         return post;
     }
+
+    async updatePost(data:IPostUpdate): Promise<Post> {
+        const post = await prisma.post.update({
+            where: { id: data.id },
+            data: {
+                content: data.content,
+                authorId: data.authorId,
+                contentPreview: data.contentPreview,
+                imagePreview: data.imagePreview,
+                title: data.title,
+                isActive: data.isActive,
+                topics: {
+                    deleteMany: {}, 
+                    create: data.topicIds?.map(topic => ({
+                        topic: {
+                            connect: { id: topic.topicId }
+                        }
+                    }))
+                }
+            },
+            include: {
+                topics: {
+                    select: {
+                        topic: true
+                    }
+                },
+                author: true,
+                company: true
+            }
+        });
+    
+        return post;
+    }
+    
 }
+
 
 export { PostRepositoryPrisma };

@@ -26,6 +26,7 @@ export async function postRoutes(fastify: FastifyInstance) {
 	CreatePostRoute(fastify);
 	getPostById(fastify);
 	UploadFile(fastify);
+	updatePost(fastify)
 }
 
 function CreatePostRoute(fastify: FastifyInstance) {
@@ -104,4 +105,17 @@ function UploadFile(fastify: FastifyInstance) {
 			}
 		},
 	});
+}
+
+function updatePost(fastify:FastifyInstance){
+	fastify.put('/', {preHandler:[jwtValidator]}, async (req:any, res:any) => {
+		const {id, imagePreview, contentPreview, authorId, topicIds, companyId, title, content, isActive} = req.body
+		const externalId = req.params.externalId
+		try{
+			const data = await postUseCase.updatePost({id, imagePreview, contentPreview, authorId, topicIds, companyId, title, content, isActive}, externalId)
+			res.code(200).send(data)
+		}catch(err){
+			res.code(400).send(`${err}`)
+		}	
+	})
 }
