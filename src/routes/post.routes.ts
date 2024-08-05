@@ -8,7 +8,7 @@ import { PostRepositoryPrisma } from "../repositories/post.repositories";
 import multer from "fastify-multer";
 import { UserUseCase } from "../usecases/user.usecase";
 import fastifyMultipart from "fastify-multipart";
-import fs from 'fs'
+import fs from "fs";
 
 const userRepositoryPrisma = new UserRepositoryPrisma();
 const companyRepositoryPrisma = new CompanyRepositoryPrisma();
@@ -26,7 +26,8 @@ export async function postRoutes(fastify: FastifyInstance) {
 	CreatePostRoute(fastify);
 	getPostById(fastify);
 	UploadFile(fastify);
-	updatePost(fastify)
+	updatePost(fastify);
+	deletePostById(fastify)
 }
 
 function CreatePostRoute(fastify: FastifyInstance) {
@@ -52,7 +53,7 @@ function CreatePostRoute(fastify: FastifyInstance) {
 						topicIds,
 						contentPreview,
 						imagePreview,
-						title
+						title,
 					},
 					externalId
 				);
@@ -98,7 +99,7 @@ function UploadFile(fastify: FastifyInstance) {
 					res.code(403).send("Operação não permitida");
 					return;
 				}
-				const url = await postUseCase.uploadFile(file.path, file.mimetype)
+				const url = await postUseCase.uploadFile(file.path, file.mimetype);
 				res.code(201).send({ url: url });
 			} catch (error: any) {
 				res.code(400).send({ error: error.message });
@@ -107,15 +108,58 @@ function UploadFile(fastify: FastifyInstance) {
 	});
 }
 
-function updatePost(fastify:FastifyInstance){
-	fastify.put('/', {preHandler:[jwtValidator]}, async (req:any, res:any) => {
-		const {id, imagePreview, contentPreview, authorId, topicIds, companyId, title, content, isActive} = req.body
-		const externalId = req.params.externalId
-		try{
-			const data = await postUseCase.updatePost({id, imagePreview, contentPreview, authorId, topicIds, companyId, title, content, isActive}, externalId)
-			res.code(200).send(data)
-		}catch(err){
-			res.code(400).send(`${err}`)
-		}	
-	})
+function updatePost(fastify: FastifyInstance) {
+	fastify.put(
+		"/",
+		{ preHandler: [jwtValidator] },
+		async (req: any, res: any) => {
+			const {
+				id,
+				imagePreview,
+				contentPreview,
+				authorId,
+				topicIds,
+				companyId,
+				title,
+				content,
+				isActive,
+			} = req.body;
+			const externalId = req.params.externalId;
+			try {
+				const data = await postUseCase.updatePost(
+					{
+						id,
+						imagePreview,
+						contentPreview,
+						authorId,
+						topicIds,
+						companyId,
+						title,
+						content,
+						isActive,
+					},
+					externalId
+				);
+				res.code(200).send(data);
+			} catch (err) {
+				res.code(400).send(`${err}`);
+			}
+		}
+	);
+}
+
+function deletePostById(fastify: FastifyInstance) {
+	fastify.delete(
+		"/:id",
+		{ preHandler: [jwtValidator] },
+		async (req: any, res: any) => {
+			const { id, externalId } = req.params;
+			try {
+				await postUseCase.deletePostById(id, externalId);
+				res.code(200).send();
+			} catch (err) {
+				res.code(400).send(`${err}`);
+			}
+		}
+	);
 }

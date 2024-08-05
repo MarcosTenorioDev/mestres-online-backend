@@ -36,4 +36,5 @@ export interface PostRepository {
 	create(data: IPostCreate, externalId: string): Promise<Post>;
 	getPostById(id: string): Promise<Post>;
 	updatePost(post: IPostUpdate): Promise<Post>;
+    deletePostById(id:string):Promise<void>
 }

@@ -104,6 +104,39 @@ class PostUseCase {
 
 		return post;
 	}
+
+	async deletePostById(id:string, externalId:string) : Promise<void>{
+		const user = await this.userRepository.findUserByExternalOrId(externalId);
+
+		/*Verificar validade do token e se o usuário dele existe  */
+		if (!user) {
+			throw new Error(
+				"Usuário não encontrado, por favor contatar o suporte técnico"
+			);
+		}
+
+		const post = await this.postRepository.getPostById(id)
+		if (!post) {
+			throw new Error(
+				"Postagem não encontrada, por favor contatar o suporte técnico"
+			);
+		}
+
+		const company = await this.companyRepository.findById(post.companyId)
+		if (!company) {
+			throw new Error(
+				"Compania não encontrada, por favor contatar o suporte técnico"
+			);
+		}
+
+		/*Verificar se o usuário é o dono da company  */
+		if (user.id != company.ownerId) {
+			throw new Error("Apenas o dono da compania pode apagar uma postagem");
+		}
+
+		return await this.postRepository.deletePostById(id)
+		
+	}
 }
 
 export { PostUseCase };

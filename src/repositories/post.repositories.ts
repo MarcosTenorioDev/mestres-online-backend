@@ -79,6 +79,14 @@ class PostRepositoryPrisma implements PostRepository {
     
         return post;
     }
+
+    async deletePostById(id: string): Promise<void> {
+        await prisma.post.delete(({
+			where: {
+				id
+			}
+		}))
+    }
     
 }
 
