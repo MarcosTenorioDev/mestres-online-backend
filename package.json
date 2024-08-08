@@ -26,10 +26,12 @@
 		"fastify": "^4.28.0",
 		"fastify-multer": "^2.0.3",
 		"fastify-multipart": "^5.4.0",
+		"fastify-raw-body": "^4.3.0",
 		"jsonwebtoken": "^9.0.2",
 		"jwks-rsa": "^3.1.0",
 		"multer": "^1.4.5-lts.1",
 		"prisma": "^5.15.1",
+		"stripe": "^16.6.0",
 		"svix": "^1.24.0",
 		"tsx": "^4.15.7",
 		"zod": "^3.23.8"

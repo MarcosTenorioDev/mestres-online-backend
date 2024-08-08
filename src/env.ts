@@ -8,7 +8,9 @@ const envSchema = z.object({
     AWS_BUCKET_NAME:z.string(),
     AWS_BUCKET_REGION:z.string(),
     AWS_ACCESS_KEY:z.string(),
-    AWS_SECRET_KEY:z.string()
+    AWS_SECRET_KEY:z.string(),
+    STRIPE_ENDPOINT_SECRET:z.string(),
+    STRIPE_SECRET_KEY:z.string()
 })
 
 export const env = envSchema.parse(process.env); 
