@@ -15,11 +15,13 @@ const port = parseInt(process.env.PORT as string);
 app.register(cors, {
 	origin: ["http://localhost:5173", "https://mestresonline.vercel.app"],
 });
-app.register(fastifyRawBody,{
-    field: 'rawBody',
-})
+app.register(async function (fastify) {
+    fastify.register(fastifyRawBody, {
+        field: 'rawBody',
+    });
+    fastify.register(stripeRoutes);
+}, { prefix: "stripe" });
 
-app.register(stripeRoutes, { prefix: "stripe" });
 app.register(userRoutes, {
 	prefix: "/users",
 });

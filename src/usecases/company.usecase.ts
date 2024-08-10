@@ -20,7 +20,7 @@ class CompanyUseCase {
 		this.topicRepository = topicRepository
 	}
 
-	async create({ name, ownerId, description, image }: CompanyCreate): Promise<Company> {
+	async create({ name, ownerId, description, image, banner }: CompanyCreate): Promise<Company> {
 		const user = await this.userRepository.findUserByExternalOrId(ownerId);
 
 		if (!user) {
@@ -33,7 +33,8 @@ class CompanyUseCase {
 			name,
 			ownerId:user.id,
 			image,
-			description
+			description,
+			banner
 		});
 	}
 

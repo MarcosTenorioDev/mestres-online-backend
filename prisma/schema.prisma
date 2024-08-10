@@ -33,6 +33,7 @@ model Company {
   topics       Topic[]
   publicCode   String @default(uuid())
   isActive    Boolean @default(false)
+  banner       String @default("")
 
   @@map("companies")
 }

@@ -13,12 +13,14 @@ class CompanyRepositoryPrisma implements CompanyRepository {
                     name: data.name,
                     description: data.description,
                     ownerId: data.ownerId,
-                    image: data.image
+                    image: data.image,
+                    banner: data.banner
                 },
                 select: {
                     id: true,
                     description:true,
                     image:true,
+                    banner:true,
                     name: true,
                     ownerId: true,
                     posts: true,

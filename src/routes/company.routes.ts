@@ -28,7 +28,7 @@ function CreateCompanyRoute(fastify: FastifyInstance) {
 	fastify.post<{ Body: CompanyCreate, Params: { externalId: string } }>("/", {
 		preHandler: jwtValidator, 
 		handler: async (req, reply) => {
-		const { name, description, image } = req.body;
+		const { name, description, image, banner } = req.body;
 		const externalId = req.params.externalId;
 		try {
 			const data = await companyUseCase.create({
@@ -36,6 +36,7 @@ function CreateCompanyRoute(fastify: FastifyInstance) {
 				ownerId:externalId,
 				description,
 				image,
+				banner
 			});
 			reply.code(201).send(data);
 		} catch (error) {

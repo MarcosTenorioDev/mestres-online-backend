@@ -7,6 +7,7 @@ export interface Company {
     name: string;
     description:string;
     image: string
+    banner: string
     ownerId: string;
     owner?: User;
     posts: Post[];
@@ -17,6 +18,7 @@ export interface CompanyHome {
     id: string;
     name: string;
     description:string;
+    banner:string
     image: string
     ownerId: string;
 }
@@ -24,6 +26,7 @@ export interface CompanyHome {
 export interface CompanyCreate {
     name: string;
     ownerId: string;
+    banner:string
     image: string
     description:string
 }
@@ -32,6 +35,7 @@ export interface CompanyUpdate {
     id: string;
     name: string;
     description:string;
+    banner:string 
     image: string
     ownerId: string;
 }
@@ -39,7 +43,7 @@ export interface CompanyUpdate {
 export interface CompanyRepository {
     create(data: CompanyCreate): Promise<Company>;
     findById(id: string): Promise<Company | null>;
-    getAllCompaniesByUserId(externalId:string):Promise<{ id: string; name: string; ownerId: string; description:string, image:string }[] | []>
+    getAllCompaniesByUserId(externalId:string):Promise<{ id: string; name: string; ownerId: string; description:string, image:string, banner:string }[] | []>
     update(data: CompanyUpdate): Promise<Company>;
     delete(id: string): Promise<void>;
     getAllProducersByCompanyId(id:string):Promise<IProducerCompany[] | null>;
