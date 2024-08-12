@@ -63,8 +63,9 @@ class CompanyRepositoryPrisma implements CompanyRepository {
             where: { id: data.id },
             data: {
                 name: data.name,
-                ownerId: data.ownerId,
-                description: data.description
+                description: data.description,
+                banner:data.banner,
+                image:data.image,
             },
             include: {
                 owner: true,

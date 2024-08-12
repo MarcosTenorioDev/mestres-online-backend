@@ -4,6 +4,7 @@ import {
 	CompanyCreate,
 	CompanyHome,
 	CompanyRepository,
+	CompanyUpdate,
 } from "../interfaces/company.interface";
 import { ITopic, TopicRepository } from "../interfaces/topic.interface";
 import { UserRepository } from "../interfaces/user.interface";
@@ -12,15 +13,25 @@ import { IProducerCompany } from "../interfaces/producer.interface";
 class CompanyUseCase {
 	private companyRepository: CompanyRepository;
 	private userRepository: UserRepository;
-	private topicRepository:TopicRepository
+	private topicRepository: TopicRepository;
 
-	constructor(companyRepository: CompanyRepository, userRepository:UserRepository, topicRepository:TopicRepository) {
+	constructor(
+		companyRepository: CompanyRepository,
+		userRepository: UserRepository,
+		topicRepository: TopicRepository
+	) {
 		this.companyRepository = companyRepository;
-        this.userRepository = userRepository
-		this.topicRepository = topicRepository
+		this.userRepository = userRepository;
+		this.topicRepository = topicRepository;
 	}
 
-	async create({ name, ownerId, description, image, banner }: CompanyCreate): Promise<Company> {
+	async create({
+		name,
+		ownerId,
+		description,
+		image,
+		banner,
+	}: CompanyCreate): Promise<Company> {
 		const user = await this.userRepository.findUserByExternalOrId(ownerId);
 
 		if (!user) {
@@ -31,14 +42,16 @@ class CompanyUseCase {
 
 		return this.companyRepository.create({
 			name,
-			ownerId:user.id,
+			ownerId: user.id,
 			image,
 			description,
-			banner
+			banner,
 		});
 	}
 
-	async getAllCompaniesByUserId(externalId: string): Promise<CompanyHome[] | []>{
+	async getAllCompaniesByUserId(
+		externalId: string
+	): Promise<CompanyHome[] | []> {
 		const user = await this.userRepository.findUserByExternalOrId(externalId);
 		if (!user) {
 			throw new Error(
@@ -46,10 +59,13 @@ class CompanyUseCase {
 			);
 		}
 
-		return this.companyRepository.getAllCompaniesByUserId(user.id)
+		return this.companyRepository.getAllCompaniesByUserId(user.id);
 	}
 
-	async getCompanyById(id:string, externalId:string):Promise<Company | null>{
+	async getCompanyById(
+		id: string,
+		externalId: string
+	): Promise<Company | null> {
 		const user = await this.userRepository.findUserByExternalOrId(externalId);
 		if (!user) {
 			throw new Error(
@@ -59,23 +75,23 @@ class CompanyUseCase {
 
 		const company = await this.companyRepository.findById(id);
 
-		if(!company){
-			throw new Error(
-				"Companhia não encontrada"
-			)
+		if (!company) {
+			throw new Error("Companhia não encontrada");
 		}
 
-		if(user.id !== company?.ownerId){
+		if (user.id !== company?.ownerId) {
 			throw new Error(
 				"Operação não permitida, por favor contate o suporte técnico"
-			)
+			);
 		}
 
-		return company
-
+		return company;
 	}
 
-	async getAllTopicsByCompanyId(externalId:string,id:string):Promise<ITopic[] | null>{
+	async getAllTopicsByCompanyId(
+		externalId: string,
+		id: string
+	): Promise<ITopic[] | null> {
 		const user = await this.userRepository.findUserByExternalOrId(externalId);
 		if (!user) {
 			throw new Error(
@@ -85,24 +101,26 @@ class CompanyUseCase {
 
 		const company = await this.companyRepository.findById(id);
 
-		if(!company){
-			throw new Error(
-				"Companhia não encontrada"
-			)
+		if (!company) {
+			throw new Error("Companhia não encontrada");
 		}
 
-		if(user.id !== company?.ownerId){
+		if (user.id !== company?.ownerId) {
 			throw new Error(
 				"Operação não permitida, por favor contate o suporte técnico"
-			)
+			);
 		}
 
-		const topics : ITopic[] | null = await this.topicRepository.getAllTopicsByCompanyId(id);
+		const topics: ITopic[] | null =
+			await this.topicRepository.getAllTopicsByCompanyId(id);
 
-		return topics
+		return topics;
 	}
 
-	async getAllProducersByCompanyId(id:string, externalId:string):Promise<IProducerCompany[] | null>{
+	async getAllProducersByCompanyId(
+		id: string,
+		externalId: string
+	): Promise<IProducerCompany[] | null> {
 		const user = await this.userRepository.findUserByExternalOrId(externalId);
 		if (!user) {
 			throw new Error(
@@ -112,22 +130,37 @@ class CompanyUseCase {
 
 		const company = await this.companyRepository.findById(id);
 
-		if(!company){
-			throw new Error(
-				"Companhia não encontrada"
-			)
+		if (!company) {
+			throw new Error("Companhia não encontrada");
 		}
 
-		if(user.id !== company?.ownerId){
+		if (user.id !== company?.ownerId) {
 			throw new Error(
 				"Operação não permitida, por favor contate o suporte técnico"
-			)
+			);
 		}
 
-		const producers: IProducerCompany[] | null = await this.companyRepository.getAllProducersByCompanyId(id)
+		const producers: IProducerCompany[] | null =
+			await this.companyRepository.getAllProducersByCompanyId(id);
 
-		return producers
+		return producers;
+	}
 
+	async update(data: CompanyUpdate, externalId: string) {
+		const user = await this.userRepository.findUserByExternalId(externalId);
+		if (!user) {
+			throw new Error(
+				"Usuário não encontrado, por favor, contatar o suporte técnico"
+			);
+		}
+
+		if (user.id != data.ownerId) {
+			throw new Error("Operação não permitida");
+		}
+
+		const company = await this.companyRepository.update(data);
+
+		return company;
 	}
 }
 
