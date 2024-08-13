@@ -99,7 +99,7 @@ function UploadFile(fastify: FastifyInstance) {
 					res.code(403).send("Operação não permitida");
 					return;
 				}
-				const url = await postUseCase.uploadFile(file.path, file.mimetype);
+				const url = await postUseCase.uploadFile(file.path, file.mimetype.replace("/","."));
 				res.code(201).send({ url: url });
 			} catch (error: any) {
 				res.code(400).send({ error: error.message });
