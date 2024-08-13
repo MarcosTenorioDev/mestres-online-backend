@@ -31,8 +31,8 @@ model Company {
   posts        Post[]
   producers    Producer[]
   topics       Topic[]
-  publicCode   String @default(uuid())
-  isActive    Boolean @default(false)
+  publicCode   String @default(uuid())@unique
+  isPaidSubscription    Boolean @default(false)
   banner       String @default("")
 
   @@map("companies")

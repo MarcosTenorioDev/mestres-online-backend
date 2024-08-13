@@ -22,7 +22,9 @@ export async function companyRoutes(fastify: FastifyInstance) {
 	GetCompanyById(fastify);
 	GetAllTopicsByCompanyId(fastify);
 	getAllProducersByCompanyId(fastify);
-	updateCompany(fastify)
+	updateCompany(fastify);
+	updatePublicCode(fastify)
+	isValidPublicCode(fastify)
 }
 
 function CreateCompanyRoute(fastify: FastifyInstance) {
@@ -122,13 +124,44 @@ function updateCompany(fastify: FastifyInstance) {
 		handler: async (req: any, res: any) => {
 			const { banner, description, id, image, name, ownerId }: CompanyUpdate =
 				req.body;
-			const {externalId} = req.params
+			const { externalId } = req.params;
 			try {
-				const data= companyUseCase.update( { banner, description, id, image, name, ownerId }, externalId)
+				const data = companyUseCase.update(
+					{ banner, description, id, image, name, ownerId },
+					externalId
+				);
 				res.code(200).send(data);
 			} catch (err) {
 				res.code(400).send(err);
 			}
 		},
 	});
+}
+
+function updatePublicCode(fastify: FastifyInstance) {
+	fastify.put("/publicCode", {
+		preHandler: [jwtValidator],
+		handler: async (req: any, res: any) => {
+			const {publicCode, companyId} = req.body
+			const {externalId} = req.params
+			try{
+				const data = await companyUseCase.updatePublicCode({publicCode, companyId}, externalId)
+				res.code(200).send(data)
+			}catch(err){
+				res.code(400).send(`${err}`)
+			}
+		},
+	});
+}
+
+function isValidPublicCode(fastify:FastifyInstance){
+	fastify.get("/publicCode/isValid/:publicCode", {preHandler:[jwtValidator], handler: async (req:any,res:any) => {
+		const {publicCode} = req.params
+			try{
+				const data = await companyUseCase.verifyIfPublicCodeIsValid(publicCode)
+				res.code(200).send(data)
+			}catch(err){
+				res.code(400).send(`${err}`)
+			}
+	}})
 }

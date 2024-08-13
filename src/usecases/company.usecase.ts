@@ -162,6 +162,47 @@ class CompanyUseCase {
 
 		return company;
 	}
+
+	async updatePublicCode(
+		data: { companyId: string; publicCode: string },
+		externalId: string
+	) {
+		const user = await this.userRepository.findUserByExternalId(externalId);
+
+		if (!user) {
+			throw new Error(
+				"Usuário não encontrado, por favor, contatar o suporte técnico"
+			);
+		}
+
+		const company = await this.companyRepository.findById(data.companyId);
+
+		if (!company) {
+			throw new Error(
+				"Perfil não encontrado, por favor, contatar o suporte técnico"
+			);
+		}
+
+		if (!company.isPaidSubscription) {
+			throw new Error(
+				"Seu perfil não aderiu a um pacote de plano de API, por favor, verifique os planos na nossa sessão de planos"
+			);
+		}
+
+		if (company.ownerId != user.id) {
+			throw new Error("Operação não permitida");
+		}
+
+		const result = await this.companyRepository.updatePublicCode({
+			id: company.id,
+			publicCode: data.publicCode,
+		});
+		return result;
+	}
+
+	async verifyIfPublicCodeIsValid(publicCode:string):Promise<boolean>{
+		return await this.companyRepository.verifyIfPublicCodeIsValid(publicCode)
+	}
 }
 
 export { CompanyUseCase };
