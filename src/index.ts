@@ -7,6 +7,7 @@ import { topicRoutes } from "./routes/topic.routes";
 import { postRoutes } from "./routes/post.routes";
 import { producerRoutes } from "./routes/producer.routes";
 import { stripeRoutes } from "./routes/stripe.routes";
+import { publicRoutes } from "./routes/public.routes"
 import fastifyRawBody from "fastify-raw-body";
 
 const app: FastifyInstance = fastify({ logger: false });
@@ -15,6 +16,11 @@ const port = parseInt(process.env.PORT as string);
 app.register(cors, {
 	origin: ["http://localhost:5173", "https://mestresonline.vercel.app"],
 });
+
+app.register(publicRoutes, {
+	prefix: "/public",
+});
+
 app.register(async function (fastify) {
     fastify.register(fastifyRawBody, {
         field: 'rawBody',
