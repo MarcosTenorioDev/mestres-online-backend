@@ -148,7 +148,7 @@ function updatePublicCode(fastify: FastifyInstance) {
 				const data = await companyUseCase.updatePublicCode({publicCode, companyId}, externalId)
 				res.code(200).send(data)
 			}catch(err){
-				res.code(400).send(`${err}`)
+				res.code(400).send(err)
 			}
 		},
 	});
@@ -161,7 +161,7 @@ function isValidPublicCode(fastify:FastifyInstance){
 				const data = await companyUseCase.verifyIfPublicCodeIsValid(publicCode)
 				res.code(200).send(data)
 			}catch(err){
-				res.code(400).send(`${err}`)
+				res.code(400).send(err)
 			}
 	}})
 }

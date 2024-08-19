@@ -183,7 +183,7 @@ class CompanyUseCase {
 			);
 		}
 
-		if (!company.isPaidSubscription) {
+		if (!user.isPaid) {
 			throw new Error(
 				"Seu perfil não aderiu a um pacote de plano de API, por favor, verifique os planos na nossa sessão de planos"
 			);

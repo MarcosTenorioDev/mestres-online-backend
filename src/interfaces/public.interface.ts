@@ -42,7 +42,6 @@ export interface PublicIPostById {
 }
 
 export interface PublicRepository {
-	verifyIfCompanyIsPaid(publicCode: string): Promise<boolean>;
 	findByPublicCode(publicCode: string): Promise<PublicCompanyHome | null>;
 	findTopicsByPublicCode(publicCode: string): Promise<PublicITopic[]>;
     findPostsByPublicCode(publicCode: string): Promise<PublicIPost[]>

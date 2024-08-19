@@ -12,7 +12,6 @@ export interface Company {
 	owner?: User;
 	posts: Post[];
 	producers?: Producer[];
-    isPaidSubscription:boolean
 }
 
 export interface CompanyHome {

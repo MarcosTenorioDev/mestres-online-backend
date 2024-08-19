@@ -29,7 +29,6 @@ class CompanyRepositoryPrisma implements CompanyRepository {
 					name: true,
 					ownerId: true,
 					posts: true,
-                    isPaidSubscription:true
 				},
 			});
 			return company;
@@ -128,18 +127,18 @@ class CompanyRepositoryPrisma implements CompanyRepository {
 		return company;
 	}
 
-    async verifyIfPublicCodeIsValid(publicCode:string){
-        const hasCompany = await prisma.company.findUnique({
-            where:{
-                publicCode
-            }
-        })
+	async verifyIfPublicCodeIsValid(publicCode: string) {
+		const hasCompany = await prisma.company.findUnique({
+			where: {
+				publicCode,
+			},
+		});
 
-        if(hasCompany){
-            return false
-        }
-        return true
-    }
+		if (hasCompany) {
+			return false;
+		}
+		return true;
+	}
 }
 
 export { CompanyRepositoryPrisma };

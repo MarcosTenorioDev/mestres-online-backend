@@ -9,15 +9,6 @@ import {
 } from "../interfaces/public.interface";
 
 class PublicRepositoryPrisma implements PublicRepository {
-	async verifyIfCompanyIsPaid(publicCode: string): Promise<boolean> {
-		const company = await prisma.company.findFirstOrThrow({
-			where: {
-				publicCode: publicCode,
-			},
-		});
-
-		return company.isPaidSubscription;
-	}
 
 	async findByPublicCode(
 		publicCode: string

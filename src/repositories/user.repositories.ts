@@ -87,7 +87,7 @@ class UserRepositoryPrisma implements UserRepository {
 
   async findUserByExternalId(externalId: string): Promise<User | null> {
     try {
-      return await prisma.user.findFirst({
+      return await prisma.user.findFirstOrThrow({
         where: {
           externalId,
         },
@@ -98,7 +98,7 @@ class UserRepositoryPrisma implements UserRepository {
   }
   async findUserByExternalOrId(id: string): Promise<User | null> {
     try {
-      return await prisma.user.findFirst({
+      return await prisma.user.findFirstOrThrow({
         where: {
           OR: [
             {
