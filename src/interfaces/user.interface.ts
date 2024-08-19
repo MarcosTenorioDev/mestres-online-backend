@@ -6,6 +6,7 @@ export interface User {
     email: string;
     phone: string | null;
     role: string | null;
+    isPaid:boolean;
 }
 export interface UserCreate {
     externalId: string;

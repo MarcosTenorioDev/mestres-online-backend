@@ -37,4 +37,5 @@ export interface PostRepository {
 	getPostById(id: string): Promise<Post>;
 	updatePost(post: IPostUpdate): Promise<Post>;
     deletePostById(id:string):Promise<void>
+	validateReqIsUserPaid(userId:string, companyId:string): Promise<void>
 }

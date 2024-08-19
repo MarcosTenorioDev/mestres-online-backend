@@ -47,6 +47,7 @@ class PostUseCase {
 			throw new Error("Apenas o dono da compania pode criar uma postagem");
 		}
 
+		await this.postRepository.validateReqIsUserPaid(user.id, company.id)
 		const post = this.postRepository.create(data, externalId);
 
 		return post;
@@ -72,13 +73,13 @@ class PostUseCase {
 				"Houve um erro ao processar sua requisição, por favor, contate o suporte técnico"
 			);
 		}
-        fs.unlinkSync(filePath);
+		fs.unlinkSync(filePath);
 
 		const url = `https://${result.Bucket}.s3.amazonaws.com/${result.Key}`;
 		return url;
 	}
 
-	async updatePost(data:IPostUpdate, externalId:string) : Promise<Post>{
+	async updatePost(data: IPostUpdate, externalId: string): Promise<Post> {
 		const user = await this.userRepository.findUserByExternalOrId(externalId);
 
 		/*Verificar validade do token e se o usuário dele existe  */
@@ -105,7 +106,7 @@ class PostUseCase {
 		return post;
 	}
 
-	async deletePostById(id:string, externalId:string) : Promise<void>{
+	async deletePostById(id: string, externalId: string): Promise<void> {
 		const user = await this.userRepository.findUserByExternalOrId(externalId);
 
 		/*Verificar validade do token e se o usuário dele existe  */
@@ -115,14 +116,14 @@ class PostUseCase {
 			);
 		}
 
-		const post = await this.postRepository.getPostById(id)
+		const post = await this.postRepository.getPostById(id);
 		if (!post) {
 			throw new Error(
 				"Postagem não encontrada, por favor contatar o suporte técnico"
 			);
 		}
 
-		const company = await this.companyRepository.findById(post.companyId)
+		const company = await this.companyRepository.findById(post.companyId);
 		if (!company) {
 			throw new Error(
 				"Compania não encontrada, por favor contatar o suporte técnico"
@@ -134,8 +135,7 @@ class PostUseCase {
 			throw new Error("Apenas o dono da compania pode apagar uma postagem");
 		}
 
-		return await this.postRepository.deletePostById(id)
-		
+		return await this.postRepository.deletePostById(id);
 	}
 }
 
