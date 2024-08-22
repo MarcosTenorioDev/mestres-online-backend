@@ -64,7 +64,7 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 
 					//Criando as subscriptions
 					switch (priceId) {
-						case "price_1PpbtgDRtrxSDCeX6MEfW7A2":
+						case env.PRODUCT_ID_BASIC_MONTHLY:
 							//Plano básico mensal - 15 Reais
 							payload = {
 								billingEmail: customerEmail,
@@ -80,7 +80,7 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 							subscriptionRepository.create(payload);
 							break;
 
-						case "price_1PqEFbDRtrxSDCeXQNRnt71m":
+						case env.PRODUCT_ID_PROFESSIONAL_MONTHLY:
 							//plano profissional mensal - 45 reais
 							payload = {
 								billingEmail: customerEmail,
@@ -96,7 +96,7 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 							subscriptionRepository.create(payload);
 							break;
 
-						case "price_1PqEK1DRtrxSDCeXKHuUgSP7":
+						case env.PRODUCT_ID_BASIC_YEARLY:
 							//plano básico anual - 130 reais
 							payload = {
 								billingEmail: customerEmail,
@@ -112,7 +112,7 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 							subscriptionRepository.create(payload);
 							break;
 						
-						case "price_1PqEZdDRtrxSDCeX7lwXln7g":
+						case env.PRODUCT_ID_PROFESSIONAL_YEARLY:
 							//plano profissional anual - 430 reais
 							payload = {
 								billingEmail: customerEmail,
