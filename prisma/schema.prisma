@@ -8,80 +8,94 @@ datasource db {
 }
 
 model User {
-  id         String  @id @default(uuid())
-  externalId String
-  firstName  String
-  lastName   String
-  email      String  @unique
-  phone      String?
-  role       String?
-  company    Company[]
-  isPaid    Boolean @default(false)
+  id             String        @id @default(uuid())
+  externalId     String
+  firstName      String
+  lastName       String
+  email          String        @unique
+  phone          String?
+  role           String?
+  company        Company[]
+  isPaid         Boolean       @default(false)
+  subscriptionId String?       @unique
+  subscription   Subscription?
 
   @@map("users")
 }
 
+model Subscription {
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  customerId          String
+  billingEmail        String
+  startDate           DateTime @default(now())
+  endDate             DateTime
+  maxPostNumber       Int
+  canAttachFile       Boolean
+  canHaveManyProfiles Boolean
+  user                User     @relation(fields: [userId], references: [id])
+}
+
 model Company {
-  id           String  @id @default(uuid())
-  name         String
-  ownerId      String
-  image        String @default("")
-  description  String
-  owner        User    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  posts        Post[]
-  producers    Producer[]
-  topics       Topic[]
-  publicCode   String @default(uuid())@unique
-  isPaidSubscription    Boolean @default(false)
-  banner       String @default("")
+  id                 String     @id @default(uuid())
+  name               String
+  ownerId            String
+  image              String     @default("")
+  description        String
+  owner              User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  posts              Post[]
+  producers          Producer[]
+  topics             Topic[]
+  publicCode         String     @unique @default(uuid())
+  isPaidSubscription Boolean    @default(false)
+  banner             String     @default("")
 
   @@map("companies")
 }
 
 model Post {
-  id           String   @id @default(uuid())
-  content      String
-  publishedAt  DateTime
-  authorId     String
-  companyId    String
-  imagePreview String
-  title        String  @default("")
+  id             String        @id @default(uuid())
+  content        String
+  publishedAt    DateTime
+  authorId       String
+  companyId      String
+  imagePreview   String
+  title          String        @default("")
   contentPreview String
-  isActive      Boolean @default(false)
-  author       Producer     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  topics       Post_Topics[]
+  isActive       Boolean       @default(false)
+  author         Producer      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  company        Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  topics         Post_Topics[]
 
   @@map("posts")
 }
 
 model Topic {
-  id          String   @id @default(uuid())
+  id          String        @id @default(uuid())
   description String
   companyId   String
-  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company     Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
   posts       Post_Topics[]
 
   @@map("topics")
 }
 
 model Post_Topics {
-  post     Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId   String
-  topic    Topic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  topicId  String
+  post    Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId  String
+  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  topicId String
 
   @@id([postId, topicId])
 }
-
 
 model Producer {
   id           String  @id @default(uuid())
   name         String
   imageProfile String?
-  email        String  
+  email        String
   office       String
-  companyId    String  
+  companyId    String
   company      Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   posts        Post[]
 
