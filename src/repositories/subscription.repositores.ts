@@ -21,7 +21,7 @@ class SubscriptionRepositoryPrisma implements SubscriptionRepository {
 			},
 		});
 
-		await prisma.subscription.create({
+		const subscription = await prisma.subscription.create({
 			data: {
 				billingEmail: data.billingEmail,
 				customerId: data.customerId,
@@ -30,6 +30,17 @@ class SubscriptionRepositoryPrisma implements SubscriptionRepository {
 				endDate: data.endDate,
 				maxPostNumber: data.maxPostNumber,
 				userId: user.id,
+				description:data.description
+			},
+		});
+
+		await prisma.user.update({
+			where: {
+				id: user.id,
+			},
+			data: {
+				isPaid: true,
+				subscriptionId: subscription.id,
 			},
 		});
 	}
@@ -56,6 +67,8 @@ class SubscriptionRepositoryPrisma implements SubscriptionRepository {
 			},
 		});
 	}
+
+	/* Criar update */
 }
 
 export { SubscriptionRepositoryPrisma };

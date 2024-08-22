@@ -74,6 +74,7 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 								endDate: nextMonth.toISOString(),
 								maxPostNumber: 50,
 								userId: userId,
+								description:"Plano Básico - Mensal"
 							};
 
 							subscriptionRepository.create(payload);
@@ -89,6 +90,7 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 								endDate: nextMonth.toISOString(),
 								maxPostNumber: 250,
 								userId: userId,
+								description:"Plano Profissional - Mensal"
 							};
 
 							subscriptionRepository.create(payload);
@@ -104,6 +106,7 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 								endDate: nextYear.toISOString(),
 								maxPostNumber: 50,
 								userId: userId,
+								description:"Plano Básico - Anual"
 							};
 
 							subscriptionRepository.create(payload);
@@ -119,6 +122,7 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 								endDate: nextYear.toISOString(),
 								maxPostNumber: 250,
 								userId: userId,
+								description:"Plano Profissional - Anual"
 							};
 
 							subscriptionRepository.create(payload);

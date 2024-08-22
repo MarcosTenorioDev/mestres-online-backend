@@ -109,6 +109,9 @@ class UserRepositoryPrisma implements UserRepository {
             },
           ],
         },
+        include:{
+          subscription:true
+        }
       });
     } catch (error) {
       throw new Error("Failed to find user by external id or id.");

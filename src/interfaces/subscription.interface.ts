@@ -6,6 +6,7 @@ export interface ISubscriptionCreate {
     maxPostNumber:number
     canAttachFile:boolean
     canHaveManyProfiles:boolean
+    description:string
 }
 export interface ISubscription {
     id:string
@@ -17,6 +18,7 @@ export interface ISubscription {
     maxPostNumber:number
     canAttachFile:boolean
     canHaveManyProfiles:boolean
+    description:string
 }
 
 export interface SubscriptionRepository {

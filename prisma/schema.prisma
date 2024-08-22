@@ -31,9 +31,12 @@ model Subscription {
   startDate           DateTime @default(now())
   endDate             DateTime
   maxPostNumber       Int
+  description         String
   canAttachFile       Boolean
   canHaveManyProfiles Boolean
   user                User     @relation(fields: [userId], references: [id])
+
+  @@map("subscription")
 }
 
 model Company {
