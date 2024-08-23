@@ -1,6 +1,7 @@
 import { prisma } from "../db/prisma-client";
 import {
 	ISubscriptionCreate,
+	ISubscriptionUpdate,
 	SubscriptionRepository,
 } from "../interfaces/subscription.interface";
 
@@ -68,7 +69,29 @@ class SubscriptionRepositoryPrisma implements SubscriptionRepository {
 		});
 	}
 
-	/* Criar update */
+
+	async update(billingEmail: string, data: Partial<ISubscriptionUpdate>): Promise<void> {
+		const subscription = await prisma.subscription.findUniqueOrThrow({
+			where: {
+				billingEmail,
+			},
+		});
+
+		await prisma.subscription.update({
+			where: {
+				billingEmail,
+			},
+			data: {
+				billingEmail: data.billingEmail ?? subscription.billingEmail,
+				customerId: data.customerId ?? subscription.customerId,
+				canAttachFile: data.canAttachFile ?? subscription.canAttachFile,
+				canHaveManyProfiles: data.canHaveManyProfiles ?? subscription.canHaveManyProfiles,
+				endDate: data.endDate ?? subscription.endDate,
+				maxPostNumber: data.maxPostNumber ?? subscription.maxPostNumber,
+				description: data.description ?? subscription.description,
+			},
+		});
+	}
 }
 
 export { SubscriptionRepositoryPrisma };

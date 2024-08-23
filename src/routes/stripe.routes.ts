@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import { Stripe } from "stripe";
 import { env } from "../env";
 import { SubscriptionRepositoryPrisma } from "../repositories/subscription.repositores";
-import { ISubscriptionCreate } from "../interfaces/subscription.interface";
+import { ISubscriptionCreate, ISubscriptionUpdate } from "../interfaces/subscription.interface";
 const subscriptionRepository = new SubscriptionRepositoryPrisma();
 export async function stripeRoutes(fastify: FastifyInstance) {
 	fastify.get("/", (req: any, res: any) => {
@@ -35,7 +35,9 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 			const data: any = event.data;
 
 			switch (event.type) {
-				case "checkout.session.completed":
+				case "checkout.session.completed":{
+					console.log('chegou aqui session completed')
+					console.log(event.type)
 					const session = await stripe.checkout.sessions.retrieve(
 						data.object.id,
 						{
@@ -132,9 +134,103 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 							break
 					}
 					break;
+				}
 
 				case "customer.subscription.deleted":{
+					console.log(event.type)
+					break;
+				}
+				case "customer.subscription.updated":{
+					console.log('chegou aqui no update')
+					console.log('Update plan',event.type)
+				
+					const session:any = await stripe.subscriptions.retrieve(
+						data.object.id
+					);
+					const customerId = session?.customer;
+					const customer: any = await stripe.customers.retrieve(
+						customerId as string
+					);
 
+
+					const priceId = session.plan.id
+					const customerEmail = customer.email;
+
+					let payload: ISubscriptionUpdate;
+					const today = new Date();
+					const nextMonth = new Date(today);
+					// Adiciona um mês à data
+					nextMonth.setMonth(today.getMonth() + 1);
+					const nextYear = new Date(today);
+					nextYear.setFullYear(today.getFullYear() + 1);
+
+					// console.log(nextYear.toISOString())
+					//update subscriptions
+					switch (priceId) {
+						case env.PRODUCT_ID_BASIC_MONTHLY:
+							//Plano básico mensal - 15 Reais
+							payload = {
+								billingEmail: customerEmail,
+								customerId: customerId,
+								canHaveManyProfiles: true,
+								canAttachFile: false,
+								endDate: nextMonth.toISOString(),
+								maxPostNumber: 50,
+								description:"Plano Básico - Mensal"
+							};
+
+							subscriptionRepository.update(customerEmail, payload);
+							break;
+
+						case env.PRODUCT_ID_PROFESSIONAL_MONTHLY:
+							//plano profissional mensal - 45 reais
+							payload = {
+								billingEmail: customerEmail,
+								customerId: customerId,
+								canHaveManyProfiles: true,
+								canAttachFile: true,
+								endDate: nextMonth.toISOString(),
+								maxPostNumber: 250,
+								description:"Plano Profissional - Mensal"
+							};
+
+							subscriptionRepository.update(customerEmail, payload);
+							break;
+
+						case env.PRODUCT_ID_BASIC_YEARLY:
+							//plano básico anual - 130 reais
+							payload = {
+								billingEmail: customerEmail,
+								customerId: customerId,
+								canHaveManyProfiles: true,
+								canAttachFile: false,
+								endDate: nextYear.toISOString(),
+								maxPostNumber: 50,
+								description:"Plano Básico - Anual"
+							};
+
+							subscriptionRepository.update(customerEmail, payload);
+							break;
+						
+						case env.PRODUCT_ID_PROFESSIONAL_YEARLY:
+							//plano profissional anual - 430 reais
+							payload = {
+								billingEmail: customerEmail,
+								customerId: customerId,
+								canHaveManyProfiles: true,
+								canAttachFile: true,
+								endDate: nextYear.toISOString(),
+								maxPostNumber: 250,
+								description:"Plano Profissional - Anual"
+							};
+
+							subscriptionRepository.update(customerEmail, payload);
+							break;
+
+						default:
+							break
+					}
+					break;
 				}
 				
 				default:
