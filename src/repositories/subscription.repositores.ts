@@ -46,10 +46,16 @@ class SubscriptionRepositoryPrisma implements SubscriptionRepository {
 		});
 	}
 
-	async revokeSubscription(id: string): Promise<void> {
+	async revokeSubscription(customerId: string): Promise<void> {
+
+		const subscription = await prisma.subscription.findFirstOrThrow({
+			where:{
+				customerId
+			}	
+		})
 		const user = await prisma.user.findFirstOrThrow({
 			where: {
-				subscriptionId: id,
+				subscriptionId: subscription.id,
 			},
 		});
 
@@ -59,12 +65,13 @@ class SubscriptionRepositoryPrisma implements SubscriptionRepository {
 			},
 			data: {
 				isPaid: false,
+				subscriptionId:null
 			},
 		});
 
 		await prisma.subscription.delete({
 			where: {
-				id,
+				id:subscription.id,
 			},
 		});
 	}

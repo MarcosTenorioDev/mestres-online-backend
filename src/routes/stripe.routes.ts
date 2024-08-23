@@ -138,6 +138,12 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 
 				case "customer.subscription.deleted":{
 					console.log(event.type)
+					const session = await stripe.subscriptions.retrieve(
+						data.object.id
+					);
+					const customerId = session?.customer;
+
+					await subscriptionRepository.revokeSubscription(customerId as string)
 					break;
 				}
 				case "customer.subscription.updated":{
