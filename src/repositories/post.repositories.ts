@@ -111,6 +111,14 @@ class PostRepositoryPrisma implements PostRepository {
 			);
 		}
 	}
+
+	async postCount(companyId:string): Promise<number>{
+		return await prisma.post.count({
+			where:{
+				companyId
+			}
+		})
+	}
 }
 
 export { PostRepositoryPrisma };

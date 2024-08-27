@@ -28,6 +28,7 @@ export async function postRoutes(fastify: FastifyInstance) {
 	UploadFile(fastify);
 	updatePost(fastify);
 	deletePostById(fastify)
+	getMyPostsCount(fastify)
 }
 
 function CreatePostRoute(fastify: FastifyInstance) {
@@ -73,6 +74,21 @@ function getPostById(fastify: FastifyInstance) {
 			const id = req.params.id;
 			try {
 				const data = await postUseCase.getPostById(id, externalId);
+				res.code(200).send(data);
+			} catch (err) {
+				res.code(400).send(err);
+			}
+		},
+	});
+}
+
+function getMyPostsCount(fastify: FastifyInstance) {
+	fastify.get("/count/:companyId", {
+		preHandler: [jwtValidator],
+		handler: async (req: any, res: any) => {
+			const companyId = req.params.companyId;
+			try {
+				const data =  await postRepositoryPrisma.postCount(companyId)
 				res.code(200).send(data);
 			} catch (err) {
 				res.code(400).send(err);
