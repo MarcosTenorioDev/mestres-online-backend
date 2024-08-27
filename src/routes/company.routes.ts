@@ -25,6 +25,7 @@ export async function companyRoutes(fastify: FastifyInstance) {
 	updateCompany(fastify);
 	updatePublicCode(fastify)
 	isValidPublicCode(fastify)
+	deleteCompany(fastify)
 }
 
 function CreateCompanyRoute(fastify: FastifyInstance) {
@@ -164,4 +165,20 @@ function isValidPublicCode(fastify:FastifyInstance){
 				res.code(400).send(err)
 			}
 	}})
+}
+
+function deleteCompany(fastify:FastifyInstance){
+	fastify.delete("/:id", {
+		preHandler: [jwtValidator],
+		handler: async (req: any, res: any) => {
+			const { id } = req.params;
+			const externalId = req.params.externalId;
+			try {
+				const data = companyUseCase.delete(externalId, id)
+				res.code(200).send(data);
+			} catch (err) {
+				res.code(400).send(err);
+			}
+		},
+	});
 }

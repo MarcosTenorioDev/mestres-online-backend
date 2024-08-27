@@ -203,6 +203,30 @@ class CompanyUseCase {
 	async verifyIfPublicCodeIsValid(publicCode:string):Promise<boolean>{
 		return await this.companyRepository.verifyIfPublicCodeIsValid(publicCode)
 	}
+
+	async delete(externalId:string, companyId:string):Promise<void>{
+		const user = await this.userRepository.findUserByExternalId(externalId);
+		if (!user) {
+			throw new Error(
+				"Usuário não encontrado, por favor, contatar o suporte técnico"
+			);
+		}
+
+		const company = await this.companyRepository.findById(companyId);
+
+		if (!company) {
+			throw new Error("Companhia não encontrada");
+		}
+
+		if (user.id !== company?.ownerId) {
+			throw new Error(
+				"Operação não permitida, por favor contate o suporte técnico"
+			);
+		}
+
+		return await this.companyRepository.delete(company.id)
+
+	}
 }
 
 export { CompanyUseCase };
