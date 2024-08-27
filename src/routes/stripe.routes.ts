@@ -71,7 +71,7 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 							payload = {
 								billingEmail: customerEmail,
 								customerId: customerId,
-								canHaveManyProfiles: true,
+								canHaveManyProfiles: false,
 								canAttachFile: false,
 								endDate: nextMonth.toISOString(),
 								maxPostNumber: 50,
@@ -103,7 +103,7 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 							payload = {
 								billingEmail: customerEmail,
 								customerId: customerId,
-								canHaveManyProfiles: true,
+								canHaveManyProfiles: false,
 								canAttachFile: false,
 								endDate: nextYear.toISOString(),
 								maxPostNumber: 50,
@@ -178,7 +178,7 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 							payload = {
 								billingEmail: customerEmail,
 								customerId: customerId,
-								canHaveManyProfiles: true,
+								canHaveManyProfiles: false,
 								canAttachFile: false,
 								endDate: nextMonth.toISOString(),
 								maxPostNumber: 50,
@@ -208,7 +208,7 @@ export async function stripeRoutes(fastify: FastifyInstance) {
 							payload = {
 								billingEmail: customerEmail,
 								customerId: customerId,
-								canHaveManyProfiles: true,
+								canHaveManyProfiles: false,
 								canAttachFile: false,
 								endDate: nextYear.toISOString(),
 								maxPostNumber: 50,
