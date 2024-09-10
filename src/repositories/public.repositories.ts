@@ -39,6 +39,27 @@ class PublicRepositoryPrisma implements PublicRepository {
 					select: {
 						id: true,
 						description: true,
+						posts: {
+							select: {
+								post:{
+									select:{
+										isActive:true
+									}
+								}
+							},
+							take: 1, // Para garantir que apenas tópicos com pelo menos um post sejam retornados
+						},
+					},
+					// Filtra tópicos que têm pelo menos um post
+					where: {
+						posts: {
+							some: {
+								post:{
+									isActive:true
+								}
+							},
+							 // 'some' garante que a consulta retorna apenas tópicos com pelo menos um post
+						},
 					},
 				},
 			},
@@ -70,8 +91,6 @@ class PublicRepositoryPrisma implements PublicRepository {
 				title: true,
 				author: {
 					select: {
-						email: true,
-						id: true,
 						imageProfile: true,
 						name: true,
 						office: true,

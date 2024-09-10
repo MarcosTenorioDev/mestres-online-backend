@@ -25,7 +25,7 @@ export interface PublicProducer {
 export interface PublicIPost {
 	id: string;
 	publishedAt: Date;
-    author: PublicProducer
+    author: { name: string; imageProfile: string | null; office: string; }
 	imagePreview: string;
 	title: string;
 	contentPreview: string;
