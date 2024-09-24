@@ -4,6 +4,7 @@ import {
 	CompanyCreate,
 	CompanyHome,
 	CompanyRepository,
+	CompanySearch,
 	CompanyUpdate,
 } from "../interfaces/company.interface";
 import { ITopic, TopicRepository } from "../interfaces/topic.interface";
@@ -226,6 +227,10 @@ class CompanyUseCase {
 
 		return await this.companyRepository.delete(company.id)
 
+	}
+
+	async getCompanyByName(name:string):Promise<CompanySearch[]>{
+		return await this.companyRepository.getCompanyByName(name)
 	}
 }
 

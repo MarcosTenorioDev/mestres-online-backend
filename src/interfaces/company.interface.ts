@@ -40,6 +40,15 @@ export interface CompanyUpdate {
 	ownerId: string;
 }
 
+export interface CompanySearch {
+	id: string;
+	name: string;
+	description: string;
+	banner: string;
+	image: string;
+	publicCode:string;
+}
+
 export interface CompanyRepository {
 	create(data: CompanyCreate): Promise<Company>;
 	findById(id: string): Promise<Company | null>;
@@ -60,5 +69,6 @@ export interface CompanyRepository {
 	delete(id: string): Promise<void>;
 	getAllProducersByCompanyId(id: string): Promise<IProducerCompany[] | null>;
 	updatePublicCode(data: { id: string; publicCode: string }): Promise<Company>;
-    verifyIfPublicCodeIsValid(publicCode:string):Promise<boolean>
+    verifyIfPublicCodeIsValid(publicCode:string):Promise<boolean>;
+	getCompanyByName(name:string):Promise<CompanySearch[]>
 }

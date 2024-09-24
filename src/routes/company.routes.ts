@@ -23,9 +23,10 @@ export async function companyRoutes(fastify: FastifyInstance) {
 	GetAllTopicsByCompanyId(fastify);
 	getAllProducersByCompanyId(fastify);
 	updateCompany(fastify);
-	updatePublicCode(fastify)
-	isValidPublicCode(fastify)
-	deleteCompany(fastify)
+	updatePublicCode(fastify);
+	isValidPublicCode(fastify);
+	deleteCompany(fastify);
+	getCompanyByName(fastify);
 }
 
 function CreateCompanyRoute(fastify: FastifyInstance) {
@@ -143,41 +144,61 @@ function updatePublicCode(fastify: FastifyInstance) {
 	fastify.put("/publicCode", {
 		preHandler: [jwtValidator],
 		handler: async (req: any, res: any) => {
-			const {publicCode, companyId} = req.body
-			const {externalId} = req.params
-			try{
-				const data = await companyUseCase.updatePublicCode({publicCode, companyId}, externalId)
-				res.code(200).send(data)
-			}catch(err){
-				res.code(400).send(err)
+			const { publicCode, companyId } = req.body;
+			const { externalId } = req.params;
+			try {
+				const data = await companyUseCase.updatePublicCode(
+					{ publicCode, companyId },
+					externalId
+				);
+				res.code(200).send(data);
+			} catch (err) {
+				res.code(400).send(err);
 			}
 		},
 	});
 }
 
-function isValidPublicCode(fastify:FastifyInstance){
-	fastify.get("/publicCode/isValid/:publicCode", {preHandler:[jwtValidator], handler: async (req:any,res:any) => {
-		const {publicCode} = req.params
-			try{
-				const data = await companyUseCase.verifyIfPublicCodeIsValid(publicCode)
-				res.code(200).send(data)
-			}catch(err){
-				res.code(400).send(err)
+function isValidPublicCode(fastify: FastifyInstance) {
+	fastify.get("/publicCode/isValid/:publicCode", {
+		preHandler: [jwtValidator],
+		handler: async (req: any, res: any) => {
+			const { publicCode } = req.params;
+			try {
+				const data = await companyUseCase.verifyIfPublicCodeIsValid(publicCode);
+				res.code(200).send(data);
+			} catch (err) {
+				res.code(400).send(err);
 			}
-	}})
+		},
+	});
 }
 
-function deleteCompany(fastify:FastifyInstance){
+function deleteCompany(fastify: FastifyInstance) {
 	fastify.delete("/:id", {
 		preHandler: [jwtValidator],
 		handler: async (req: any, res: any) => {
 			const { id } = req.params;
 			const externalId = req.params.externalId;
 			try {
-				const data = companyUseCase.delete(externalId, id)
+				const data = companyUseCase.delete(externalId, id);
 				res.code(200).send(data);
 			} catch (err) {
 				res.code(400).send(err);
+			}
+		},
+	});
+}
+
+function getCompanyByName(fastify: FastifyInstance) {
+	fastify.get("/name/:companyName", {
+		handler: async (req:any, res:any) => {
+			const { companyName } = req.params;
+			try {
+				const data = await companyUseCase.getCompanyByName(companyName)
+				return res.code(200).send(data);
+			} catch (error) {
+				return res.code(400).send(error);
 			}
 		},
 	});

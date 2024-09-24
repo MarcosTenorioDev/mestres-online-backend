@@ -5,6 +5,7 @@ import {
 	CompanyUpdate,
 	CompanyRepository,
 	CompanyHome,
+	CompanySearch,
 } from "../interfaces/company.interface";
 import { IProducerCompany, Producer } from "../interfaces/producer.interface";
 
@@ -138,6 +139,35 @@ class CompanyRepositoryPrisma implements CompanyRepository {
 			return false;
 		}
 		return true;
+	}
+
+	async getCompanyByName(name: string): Promise<CompanySearch[]> {
+		const companies = await prisma.company.findMany({
+			where:{
+				name:{
+					contains:name
+				}
+			},orderBy:{
+				posts: {
+					_count: 'desc',
+				  },
+			},
+			select:{
+				id: true,
+				name: true,
+				description: true,
+				banner: true,
+				image: true,
+				publicCode:true,
+				_count:{
+					select:{
+						posts:true
+					}
+				}
+			},take:10
+		})
+
+		return companies
 	}
 }
 
