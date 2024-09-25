@@ -138,10 +138,12 @@ class CompanyRepositoryPrisma implements CompanyRepository {
 		id: string;
 		publicCode: string;
 	}): Promise<Company> {
+		const publicCodeUpdate = data.publicCode.toLowerCase()
+
 		const company = await prisma.company.update({
 			where: { id: data.id },
 			data: {
-				publicCode: data.publicCode,
+				publicCode: publicCodeUpdate,
 			},
 			include: {
 				owner: {
@@ -165,16 +167,15 @@ class CompanyRepositoryPrisma implements CompanyRepository {
 	}
 
 	async verifyIfPublicCodeIsValid(publicCode: string) {
+		const searchCode = publicCode.toLowerCase()
 		const hasCompany = await prisma.company.findUnique({
 			where: {
-				publicCode,
+				publicCode: searchCode,
 			},
 		});
 
-		if (hasCompany) {
-			return false;
-		}
-		return true;
+		
+		return !hasCompany
 	}
 
 	async getCompanyByName(name: string): Promise<CompanySearch[]> {
