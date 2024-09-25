@@ -57,7 +57,7 @@ class PostUseCase {
 
 		if (user.subscription && user.subscription.maxPostNumber >= postCount) {
 			throw new Error(
-				"Você atingiu o limite máximo de postagens para o seu plano, por favor, faça o upgradedo ou entre em contato com a nossa equipe"
+				"Você atingiu o limite máximo de postagens para o seu plano, por favor, faça o upgrade ou entre em contato com a nossa equipe"
 			);
 		}
 
