@@ -145,7 +145,8 @@ class CompanyRepositoryPrisma implements CompanyRepository {
 		const companies = await prisma.company.findMany({
 			where:{
 				name:{
-					contains:name
+					contains:name,
+					mode:"insensitive"
 				}
 			},orderBy:{
 				posts: {
