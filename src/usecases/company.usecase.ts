@@ -40,7 +40,11 @@ class CompanyUseCase {
 				"Usuário não encontrado, por favor contatar o suporte técnico"
 			);
 		}
-
+		if(!user.subscription?.canHaveManyProfiles){
+			throw new Error(
+				"Operação não permitida"
+			);
+		}
 		return this.companyRepository.create({
 			name,
 			ownerId: user.id,
@@ -173,6 +177,11 @@ class CompanyUseCase {
 		if (!user) {
 			throw new Error(
 				"Usuário não encontrado, por favor, contatar o suporte técnico"
+			);
+		}
+		if(!user.subscriptionId){
+			throw new Error(
+				"Operação não permitida"
 			);
 		}
 

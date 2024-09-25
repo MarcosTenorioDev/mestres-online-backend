@@ -7,7 +7,7 @@ import {
 } from "../interfaces/user.interface";
 
 class UserRepositoryPrisma implements UserRepository {
-  async create(data: UserCreate): Promise<User> {
+  async create(data: UserCreate): Promise<UserCreate> {
     try {
       return await prisma.user.create({
         data: {
@@ -16,7 +16,7 @@ class UserRepositoryPrisma implements UserRepository {
           lastName: data.lastName,
           email: data.email,
           role: "user",
-        },
+        }
       });
     } catch (error) {
       throw new Error("Unable to create user");
@@ -41,6 +41,17 @@ class UserRepositoryPrisma implements UserRepository {
         where: {
           email,
         },
+        include:{
+          subscription:{
+            select:{
+              canAttachFile:true,
+              canHaveManyProfiles:true,
+              description:true,
+              maxPostNumber:true,
+              id:true
+            }
+          }
+        }
       });
     } catch (error) {
       throw new Error("Failed to find user by email");
@@ -60,6 +71,17 @@ class UserRepositoryPrisma implements UserRepository {
           role: data.role ?? null,
           phone: data.phone,
         },
+        include:{
+          subscription:{
+            select:{
+              canAttachFile:true,
+              canHaveManyProfiles:true,
+              description:true,
+              maxPostNumber:true,
+              id:true
+            }
+          }
+        }
       });
       return result;
     } catch (error) {
@@ -91,6 +113,17 @@ class UserRepositoryPrisma implements UserRepository {
         where: {
           externalId,
         },
+        include:{
+          subscription:{
+            select:{
+              canAttachFile:true,
+              canHaveManyProfiles:true,
+              description:true,
+              maxPostNumber:true,
+              id:true
+            }
+          }
+        }
       });
     } catch (error) {
       throw new Error("Failed to find user by external id.");
@@ -110,7 +143,15 @@ class UserRepositoryPrisma implements UserRepository {
           ],
         },
         include:{
-          subscription:true
+          subscription:{
+            select:{
+              canAttachFile:true,
+              canHaveManyProfiles:true,
+              description:true,
+              maxPostNumber:true,
+              id:true
+            }
+          }
         }
       });
     } catch (error) {

@@ -47,7 +47,21 @@ class PostUseCase {
 			throw new Error("Apenas o dono da compania pode criar uma postagem");
 		}
 
-		await this.postRepository.validateReqIsUserPaid(user.id, company.id)
+		const postCount = await this.postRepository.postCount(company.id);
+
+		if (!user.subscription && postCount >= 2) {
+			throw new Error(
+				"Usuário do plano gratuito apenas pode fazer a criação de até duas postagens no máximo, faça o upgrade do plano na nossa página inicial"
+			);
+		}
+
+		if (user.subscription && user.subscription.maxPostNumber >= postCount) {
+			throw new Error(
+				"Você atingiu o limite máximo de postagens para o seu plano, por favor, faça o upgradedo ou entre em contato com a nossa equipe"
+			);
+		}
+
+		await this.postRepository.validateReqIsUserPaid(user.id, company.id);
 		const post = this.postRepository.create(data, externalId);
 
 		return post;

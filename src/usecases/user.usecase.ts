@@ -1,4 +1,4 @@
-import { User, UserCreate, UserRepository, UserUpdate, UserUpdateByClerk } from "../interfaces/user.interface";
+import { User, UserCreate, UserRepository, UserUpdateByClerk } from "../interfaces/user.interface";
 
 class UserUseCase {
 	private userRepository: UserRepository;
@@ -12,7 +12,7 @@ class UserUseCase {
 		firstName,
 		lastName,
 		email,
-	}: UserCreate): Promise<User> {
+	}: UserCreate): Promise<UserCreate> {
 		const existingUser = await this.userRepository.findByEmail(email);
 		if (existingUser) {
 			throw new Error("Email Já existe");

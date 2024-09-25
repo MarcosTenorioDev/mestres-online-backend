@@ -42,7 +42,19 @@ class CompanyRepositoryPrisma implements CompanyRepository {
 		const company = await prisma.company.findUnique({
 			where: { id },
 			include: {
-				owner: true,
+				owner: {
+					include:{
+						subscription:{
+							select:{
+							  canAttachFile:true,
+							  canHaveManyProfiles:true,
+							  description:true,
+							  maxPostNumber:true,
+							  id:true
+							}
+						  }
+					}
+				},
 				posts: {
 					include: {
 						author: true,
@@ -73,7 +85,19 @@ class CompanyRepositoryPrisma implements CompanyRepository {
 				image: data.image,
 			},
 			include: {
-				owner: true,
+				owner: {
+					include:{
+						subscription:{
+							select:{
+							  canAttachFile:true,
+							  canHaveManyProfiles:true,
+							  description:true,
+							  maxPostNumber:true,
+							  id:true
+							}
+						  }
+					}
+				},
 				posts: true,
 				producers: true,
 			},
@@ -120,7 +144,19 @@ class CompanyRepositoryPrisma implements CompanyRepository {
 				publicCode: data.publicCode,
 			},
 			include: {
-				owner: true,
+				owner: {
+					include:{
+						subscription:{
+							select:{
+							  canAttachFile:true,
+							  canHaveManyProfiles:true,
+							  description:true,
+							  maxPostNumber:true,
+							  id:true
+							}
+						  }
+					}
+				},
 				posts: true,
 				producers: true,
 			},
