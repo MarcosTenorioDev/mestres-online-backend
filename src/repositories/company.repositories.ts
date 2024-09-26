@@ -199,7 +199,11 @@ class CompanyRepositoryPrisma implements CompanyRepository {
 				publicCode:true,
 				_count:{
 					select:{
-						posts:true
+						posts:{
+							where:{
+								isActive:true
+							}
+						}
 					}
 				}
 			},take:10
