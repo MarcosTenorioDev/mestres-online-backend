@@ -8,6 +8,7 @@ export async function publicRoutes(fastify: FastifyInstance) {
     getCompanyPostsByPublicCode(fastify)
     getPublicPostById(fastify)
     getPublicPostByTopicId(fastify)
+	getPostRecomendationsByPostId(fastify)
 }
 
 function getCompanyByPublicCode(fastify: FastifyInstance) {
@@ -72,6 +73,20 @@ function getPublicPostByTopicId(fastify:FastifyInstance){
             const{ publicCode, topicId }= req.params
 			try {
 				const data = await publicUseCase.getPublicPostsByTopicId({ publicCode, topicId });
+				res.code(200).send(data);
+			} catch (err) {
+				res.code(400).send(err);
+			}
+		},
+	});
+}
+
+function getPostRecomendationsByPostId(fastify:FastifyInstance){
+	fastify.get("/recommendations/:postId", {
+		handler: async (req: any, res: any) => {
+            const{ postId }= req.params
+			try {
+				const data = await publicUseCase.getPostRecomendationByPostId(postId);
 				res.code(200).send(data);
 			} catch (err) {
 				res.code(400).send(err);

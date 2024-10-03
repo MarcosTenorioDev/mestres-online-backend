@@ -135,6 +135,12 @@ class PublicRepositoryPrisma implements PublicRepository {
 				imagePreview: true,
 				publishedAt: true,
 				title: true,
+				company:{
+					select:{
+						name:true,
+						publicCode:true,
+					}
+				},
 				author: {
 					select: {
 						email: true,
@@ -169,6 +175,97 @@ class PublicRepositoryPrisma implements PublicRepository {
 
 		return formattedPost;
 	}
+
+	async findPostRecommendationsByPostId(
+		postId: string
+	  ): Promise<any[]> {
+
+		const originalPost = await prisma.post.findUniqueOrThrow({
+		  where: {
+			id: postId,
+			isActive: true,
+		  },
+		  select: {
+			id: true,
+			companyId:true,
+			topics: {
+			  select: {
+				topicId: true,
+			  },
+			},
+		  },
+		});
+
+		const topicIds = originalPost.topics.map((t) => t.topicId);
+	  
+		const similarPosts = await prisma.post.findMany({
+		  where: {
+			isActive: true,
+			id: { not: postId },
+			companyId: originalPost.companyId,
+			topics: {
+			  some: {
+				topicId: { in: topicIds },
+			  },
+			},
+		  },
+		  take: 4,
+		  select: {
+			id: true,
+			title: true,
+			contentPreview: true,
+			imagePreview: true,
+			publishedAt:true,
+			author:{
+				select:{
+					name:true,
+					imageProfile:true,
+				}
+			},
+			company: {
+			  select: {
+				name: true,
+				publicCode:true,
+			  },
+			},
+		  },
+		});
+	  
+		if (similarPosts.length >= 4) {
+		  return similarPosts;
+		}
+		
+		const similarPostsIds = similarPosts.map((post) => post.id)
+		const remainingPosts = await prisma.post.findMany({
+		  where: {
+			isActive: true,
+			id: { notIn: [postId, ...similarPostsIds]},
+		  },
+		  take: 4 - similarPosts.length,
+		  select: {
+			id: true,
+			title: true,
+			contentPreview: true,
+			imagePreview: true,
+			publishedAt:true,
+			author:{
+				select:{
+					name:true,
+					imageProfile:true,
+				}
+			},
+			company: {
+			  select: {
+				name: true,
+				publicCode:true,
+			  },
+			},
+		  },
+		});
+	  
+		return [...similarPosts, ...remainingPosts];
+	  }
+	  
 
 	async findPostsByTopicId(
 		publicCode: string,

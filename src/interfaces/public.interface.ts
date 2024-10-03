@@ -25,26 +25,34 @@ export interface PublicProducer {
 export interface PublicIPost {
 	id: string;
 	publishedAt: Date;
-    author: { name: string; imageProfile: string | null; office: string; }
+	author: { name: string; imageProfile: string | null; office: string };
 	imagePreview: string;
 	title: string;
 	contentPreview: string;
-    topics: {description:string, id:string}[]
+	topics: { description: string; id: string }[];
 }
 export interface PublicIPostById {
 	id: string;
 	publishedAt: Date;
-    author: PublicProducer
+	author: PublicProducer;
 	imagePreview: string;
 	title: string;
+	company: {
+		name: string;
+		publicCode: string;
+	};
 	contentPreview: string;
-    topics: {description:string, id:string}[]
+	topics: { description: string; id: string }[];
 }
 
 export interface PublicRepository {
 	findByPublicCode(publicCode: string): Promise<PublicCompanyHome | null>;
 	findTopicsByPublicCode(publicCode: string): Promise<PublicITopic[]>;
-    findPostsByPublicCode(publicCode: string): Promise<PublicIPost[]>
-    findPostByPublicCodeAndById(postId:string):Promise<PublicIPostById | null>
-    findPostsByTopicId(publicCode:string, topicId: string):Promise<PublicIPost[]>
+	findPostsByPublicCode(publicCode: string): Promise<PublicIPost[]>;
+	findPostByPublicCodeAndById(postId: string): Promise<PublicIPostById | null>;
+	findPostsByTopicId(
+		publicCode: string,
+		topicId: string
+	): Promise<PublicIPost[]>;
+	findPostRecommendationsByPostId(postId: string): Promise<any[]>;
 }

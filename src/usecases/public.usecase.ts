@@ -18,9 +18,13 @@ class PublicUseCase {
     }
 
     async getTopicByPublicCode(publicCode:string){
-
         const topics = await this.publicRepository.findTopicsByPublicCode(publicCode)
         return topics
+    }
+
+
+    async getPostRecomendationByPostId(postId:string){
+        return await this.publicRepository.findPostRecommendationsByPostId(postId)
     }
 
     
