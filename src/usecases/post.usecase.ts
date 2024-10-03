@@ -54,8 +54,7 @@ class PostUseCase {
 				"Usuário do plano gratuito apenas pode fazer a criação de até duas postagens no máximo, faça o upgrade do plano na nossa página inicial"
 			);
 		}
-
-		if (user.subscription && user.subscription.maxPostNumber >= postCount) {
+		if (user.subscription && user.subscription.maxPostNumber <= postCount) {
 			throw new Error(
 				"Você atingiu o limite máximo de postagens para o seu plano, por favor, faça o upgrade ou entre em contato com a nossa equipe"
 			);
