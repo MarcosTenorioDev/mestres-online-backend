@@ -240,6 +240,7 @@ class PublicRepositoryPrisma implements PublicRepository {
 		  where: {
 			isActive: true,
 			id: { notIn: [postId, ...similarPostsIds]},
+			companyId: originalPost.companyId
 		  },
 		  take: 4 - similarPosts.length,
 		  select: {
