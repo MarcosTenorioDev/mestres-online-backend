@@ -22,28 +22,31 @@ class SubscriptionRepositoryPrisma implements SubscriptionRepository {
 			},
 		});
 
-		const subscription = await prisma.subscription.create({
-			data: {
-				billingEmail: data.billingEmail,
-				customerId: data.customerId,
-				canAttachFile: data.canAttachFile,
-				canHaveManyProfiles: data.canHaveManyProfiles,
-				endDate: data.endDate,
-				maxPostNumber: data.maxPostNumber,
-				userId: user.id,
-				description:data.description
-			},
-		});
+		if(!user.subscriptionId){
+			const subscription = await prisma.subscription.create({
+				data: {
+					billingEmail: data.billingEmail,
+					customerId: data.customerId,
+					canAttachFile: data.canAttachFile,
+					canHaveManyProfiles: data.canHaveManyProfiles,
+					endDate: data.endDate,
+					maxPostNumber: data.maxPostNumber,
+					userId: user.id,
+					description:data.description
+				},
+			});
+	
+			await prisma.user.update({
+				where: {
+					id: user.id,
+				},
+				data: {
+					isPaid: true,
+					subscriptionId: subscription.id,
+				},
+			});
+		}
 
-		await prisma.user.update({
-			where: {
-				id: user.id,
-			},
-			data: {
-				isPaid: true,
-				subscriptionId: subscription.id,
-			},
-		});
 	}
 
 	async revokeSubscription(customerId: string): Promise<void> {
