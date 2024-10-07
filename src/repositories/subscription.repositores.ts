@@ -12,7 +12,7 @@ class SubscriptionRepositoryPrisma implements SubscriptionRepository {
 				OR: [{ id: data.userId as string }, { email: data.billingEmail }],
 			},
 		});
-
+		console.log("creating user subscription of user: ", user)
 		await prisma.user.update({
 			where: {
 				id: user.id,
@@ -58,6 +58,7 @@ class SubscriptionRepositoryPrisma implements SubscriptionRepository {
 				subscriptionId: subscription.id,
 			},
 		});
+		console.log("revoking user subscription of user: ", user)
 
 		await prisma.user.update({
 			where: {
@@ -83,7 +84,7 @@ class SubscriptionRepositoryPrisma implements SubscriptionRepository {
 				billingEmail,
 			},
 		});
-
+		console.log("updating subscription :", subscription)
 		await prisma.subscription.update({
 			where: {
 				billingEmail,
