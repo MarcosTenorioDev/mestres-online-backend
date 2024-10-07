@@ -40,7 +40,8 @@ class CompanyUseCase {
 				"Usuário não encontrado, por favor contatar o suporte técnico"
 			);
 		}
-		if(!user.subscription?.canHaveManyProfiles){
+		const companies = await this.companyRepository.getAllCompaniesByUserId(user.id)
+		if(companies.length && !user.subscription?.canHaveManyProfiles){
 			throw new Error(
 				"Operação não permitida"
 			);
